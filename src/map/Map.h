@@ -11,8 +11,8 @@ class Map {
 public:
     Map(int x, int y);
 
-    void setTIle(int x,int y,int tileID);
-    void getTile(int x,int y);
+    void setTile(int x,int y,int tileID);
+    int getTile(int x,int y) const;
 
 private;
     //Это наш размер карты будет

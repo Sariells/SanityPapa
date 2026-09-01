@@ -12,5 +12,11 @@ Map::Map(int x, int y)
 }
 
 void Map::setTile(int x,int y,int tileID){
+    int index = y * Width + x;
+    map[index] = tileID;
+}
 
+int Map::getTile(int x,int y) const{
+    int index = y * Width + x;
+    return index;
 }
