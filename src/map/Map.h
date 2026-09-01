@@ -4,18 +4,23 @@
 
 #ifndef RPGMAKER_MAP_H
 #define RPGMAKER_MAP_H
+
 #include <vector>
 
 class Map {
 public:
     Map(int x, int y);
+
+    void setTIle(int x,int y,int tileID);
+    void getTile(int x,int y);
+
+private;
     //Это наш размер карты будет
     int Width = 0;
     int Height = 0;
     //это массив он будет заполнен  кол-во элементов по формуле widht * height = elements
     std::vector<int> map;
     //а потом мы сделаем что-то вроде
-
 };
 
 

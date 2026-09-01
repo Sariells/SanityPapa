@@ -10,3 +10,6 @@ Map::Map(int x, int y)
 {
     map.resize(x * y);
 }
+Map::Map(int x, int y) {
+
+}
