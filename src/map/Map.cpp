@@ -10,6 +10,7 @@ Map::Map(int x, int y)
 {
     map.resize(x * y);
 }
-Map::Map(int x, int y) {
+
+void Map::setTile(int x,int y,int tileID){
 
 }
