@@ -12,6 +12,8 @@ public:
     Map(int x, int y);
 
     void setTile(int x,int y,int tileID);
+
+    [[nodiscard]]
     int getTile(int x,int y) const;
 
 private;

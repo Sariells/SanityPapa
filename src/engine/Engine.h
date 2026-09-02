@@ -1,0 +1,36 @@
+#pragma once
+
+#include <SDL3/SDL.h>
+
+#include "../graphics/Tileset.h"
+#include "../assets/AssetManager.h"
+
+#include <filesystem>
+
+class Engine
+{
+public:
+    explicit Engine(
+            const std::filesystem::path& projectRoot
+    );
+
+    ~Engine();
+
+    Engine(const Engine&) = delete;
+    Engine& operator=(const Engine&) = delete;
+
+    bool initialize();
+
+    void run();
+
+    void shutdown();
+
+private:
+    bool running = false;
+
+    SDL_Window* window = nullptr;
+    SDL_Renderer* renderer = nullptr;
+
+    AssetManager assets;
+    Tileset tileset;
+};
