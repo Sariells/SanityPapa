@@ -15,6 +15,7 @@ find_package(SDL3_ttf CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 find_package(tinyxml2 CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
 
 # =========================
 # Executable
@@ -40,13 +41,13 @@ src/assets/AssetManager.h
 # =========================
 
 target_link_libraries(Rpgmaker PRIVATE
-SDL3::SDL3
-SDL3_image::SDL3_image
-SDL3_ttf::SDL3_ttf
-
-fmt::fmt
-nlohmann_json::nlohmann_json
-tinyxml2::tinyxml2
+        SDL3::SDL3
+        SDL3_image::SDL3_image
+        SDL3_ttf::SDL3_ttf
+        imgui::imgui
+        fmt::fmt
+        nlohmann_json::nlohmann_json
+        tinyxml2::tinyxml2
 )
 
 # =========================

@@ -12,7 +12,13 @@
     "sdl3-ttf",
     "fmt",
     "nlohmann-json",
-    "imgui",
+    {
+      "name": "imgui",
+      "features": [
+        "sdl3-binding",
+        "sdl3-renderer-binding"
+      ]
+    },
     "tinyxml2"
   ]
 }

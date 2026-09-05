@@ -1,12 +1,10 @@
 #include "Engine.h"
 
+
 #include <fmt/core.h>
 
-Engine::Engine(
-        const std::filesystem::path& projectRoot
-)
-        : assets(projectRoot)
-{
+Engine::Engine(const std::filesystem::path &projectRoot, Map map)
+        : assets(projectRoot), map(map) {
 }
 
 Engine::~Engine()
@@ -16,9 +14,7 @@ Engine::~Engine()
 
 bool Engine::initialize()
 {
-    // ---------------------------------------------------------
     // SDL
-    // ---------------------------------------------------------
 
     if (!SDL_Init(SDL_INIT_VIDEO))
     {
@@ -30,9 +26,7 @@ bool Engine::initialize()
         return false;
     }
 
-    // ---------------------------------------------------------
     // Window
-    // ---------------------------------------------------------
 
     window = SDL_CreateWindow(
             "RpgMaker",
@@ -53,9 +47,7 @@ bool Engine::initialize()
         return false;
     }
 
-    // ---------------------------------------------------------
     // Renderer
-    // ---------------------------------------------------------
 
     renderer = SDL_CreateRenderer(
             window,
@@ -77,14 +69,9 @@ bool Engine::initialize()
         return false;
     }
 
-    // ---------------------------------------------------------
     // Load tileset
-    // ---------------------------------------------------------
 
-    const auto tilesetPath =
-            assets.data(
-                    "tilesets/punyworld-overworld-tiles.tsx"
-            );
+    const auto tilesetPath = assets.data("tilesets/punyworld-overworld-tiles.tsx");
 
     if (!tileset.load(
             renderer,
@@ -100,9 +87,22 @@ bool Engine::initialize()
         return false;
     }
 
-    // ---------------------------------------------------------
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+
+    if(!ImGui_ImplSDL3_InitForSDLRenderer(window, renderer)){
+        fmt::print("ImGui SDL3 init error\n");
+        return false;
+    }
+    if(!ImGui_ImplSDLRenderer3_Init(renderer)){
+        fmt::print("ImGui SDL3Render init error\n");
+        return  false;
+    }
+
+
     // Engine ready
-    // ---------------------------------------------------------
+
 
     running = true;
 
@@ -119,26 +119,27 @@ void Engine::run()
 
     while (running)
     {
-        // -----------------------------------------------------
         // Events
-        // -----------------------------------------------------
 
         while (SDL_PollEvent(&event))
         {
+            ImGui_ImplSDL3_ProcessEvent(&event);
             if (event.type == SDL_EVENT_QUIT)
             {
                 running = false;
             }
         }
 
-        // -----------------------------------------------------
-        // Update
-        // -----------------------------------------------------
+        //IMGUI NEW FRAME
+        ImGui_ImplSDLRenderer3_NewFrame();
+        ImGui_ImplSDL3_NewFrame();
+        ImGui::NewFrame();
 
-
-        // -----------------------------------------------------
-        // Render
-        // -----------------------------------------------------
+        //GUI
+        ImGui::Begin("Map Editor");
+        ImGui::Text("Hello");
+        ImGui::End();
+        // Game Render
 
         SDL_SetRenderDrawColor(
                 renderer,
@@ -151,11 +152,14 @@ void Engine::run()
         SDL_RenderClear(renderer);
 
         // Тестовый тайл.
-        tileset.draw(
-                renderer,
-                0.0f,
-                0.0f
-        );
+        map.draw(renderer, tileset);
+
+        //IMGUI RENDER
+        ImGui::Render();
+        ImGui_ImplSDLRenderer3_RenderDrawData(
+                ImGui::GetDrawData(),
+                renderer
+                );
 
         SDL_RenderPresent(renderer);
     }

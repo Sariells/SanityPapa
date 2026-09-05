@@ -5,23 +5,31 @@
 #ifndef RPGMAKER_MAP_H
 #define RPGMAKER_MAP_H
 
+#include <SDL3/SDL.h>
+
 #include <vector>
 
+
+#include "../graphics/Tileset.h"
 class Map {
 public:
     Map(int x, int y);
 
     void setTile(int x,int y,int tileID);
 
+    void draw(SDL_Renderer* renderer, const Tileset& tileset) const;
+
     [[nodiscard]]
     int getTile(int x,int y) const;
 
-private;
+    bool isInside(int x, int y) const;
+
+private:
     //Это наш размер карты будет
     int Width = 0;
     int Height = 0;
     //это массив он будет заполнен  кол-во элементов по формуле widht * height = elements
-    std::vector<int> map;
+    std::vector<int> mapTile;
     //а потом мы сделаем что-то вроде
 };
 

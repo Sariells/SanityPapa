@@ -34,9 +34,7 @@ bool Tileset::load(
             path.string()
     );
 
-    // ---------------------------------------------------------
     // Check TSX
-    // ---------------------------------------------------------
 
     if (!std::filesystem::exists(path))
     {
@@ -48,9 +46,7 @@ bool Tileset::load(
         return false;
     }
 
-    // ---------------------------------------------------------
     // Load TSX
-    // ---------------------------------------------------------
 
     XMLDocument document;
 
@@ -77,9 +73,9 @@ bool Tileset::load(
         return false;
     }
 
-    // ---------------------------------------------------------
+
     // Read tileset properties
-    // ---------------------------------------------------------
+
 
     if (tilesetElement->QueryIntAttribute(
             "tilewidth",
@@ -152,9 +148,9 @@ bool Tileset::load(
         return false;
     }
 
-    // ---------------------------------------------------------
+
     // Find image
-    // ---------------------------------------------------------
+
 
     const XMLElement* imageElement =
             tilesetElement->FirstChildElement("image");
@@ -182,15 +178,13 @@ bool Tileset::load(
         return false;
     }
 
-    // ---------------------------------------------------------
+
     // Resolve image path relative to TSX
-    // ---------------------------------------------------------
 
-    std::filesystem::path imagePath =
-            path.parent_path() / imageSource;
 
-    imagePath =
-            std::filesystem::weakly_canonical(imagePath);
+    std::filesystem::path imagePath = path.parent_path() / imageSource;
+
+    imagePath = std::filesystem::weakly_canonical(imagePath);
 
     fmt::print(
             "Loading tileset image: {}\n",
@@ -208,9 +202,9 @@ bool Tileset::load(
         return false;
     }
 
-    // ---------------------------------------------------------
+
     // Load PNG
-    // ---------------------------------------------------------
+
 
     SDL_Surface* surface =
             IMG_Load(imagePath.string().c_str());
@@ -233,12 +227,11 @@ bool Tileset::load(
             surface->h
     );
 
-    // ---------------------------------------------------------
-    // Create texture
-    // ---------------------------------------------------------
 
-    texture =
-            SDL_CreateTextureFromSurface(
+    // Create texture
+
+
+    texture = SDL_CreateTextureFromSurface(
                     renderer,
                     surface
             );
@@ -256,9 +249,9 @@ bool Tileset::load(
         return false;
     }
 
-    // ---------------------------------------------------------
+
     // Success
-    // ---------------------------------------------------------
+
 
     fmt::print(
             "Tileset loaded successfully:\n"

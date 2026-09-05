@@ -1,18 +1,20 @@
 #pragma once
 
 #include <SDL3/SDL.h>
+#include <imgui.h>
+#include <imgui_impl_sdl3.h>
+#include <imgui_impl_sdlrenderer3.h>
 
 #include "../graphics/Tileset.h"
 #include "../assets/AssetManager.h"
+#include "../map/Map.h"
 
 #include <filesystem>
 
 class Engine
 {
 public:
-    explicit Engine(
-            const std::filesystem::path& projectRoot
-    );
+    explicit Engine(const std::filesystem::path &projectRoot, Map map);
 
     ~Engine();
 
@@ -33,4 +35,5 @@ private:
 
     AssetManager assets;
     Tileset tileset;
+    Map map;
 };
