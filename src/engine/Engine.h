@@ -8,6 +8,7 @@
 #include "../graphics/Tileset.h"
 #include "../assets/AssetManager.h"
 #include "../map/Map.h"
+#include "../editors/EditorUI.h"
 
 #include <filesystem>
 
@@ -36,4 +37,5 @@ private:
     AssetManager assets;
     Tileset tileset;
     Map map;
+    EditorUI editorUi;
 };

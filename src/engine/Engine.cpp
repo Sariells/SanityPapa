@@ -87,22 +87,9 @@ bool Engine::initialize()
         return false;
     }
 
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGui::StyleColorsDark();
-
-    if(!ImGui_ImplSDL3_InitForSDLRenderer(window, renderer)){
-        fmt::print("ImGui SDL3 init error\n");
-        return false;
-    }
-    if(!ImGui_ImplSDLRenderer3_Init(renderer)){
-        fmt::print("ImGui SDL3Render init error\n");
-        return  false;
-    }
-
+    editorUi.initialize(window,renderer);
 
     // Engine ready
-
 
     running = true;
 
@@ -123,7 +110,7 @@ void Engine::run()
 
         while (SDL_PollEvent(&event))
         {
-            ImGui_ImplSDL3_ProcessEvent(&event);
+            editorUi.processEvent(event);
             if (event.type == SDL_EVENT_QUIT)
             {
                 running = false;
@@ -131,14 +118,10 @@ void Engine::run()
         }
 
         //IMGUI NEW FRAME
-        ImGui_ImplSDLRenderer3_NewFrame();
-        ImGui_ImplSDL3_NewFrame();
-        ImGui::NewFrame();
+        editorUi.newFrame();
 
         //GUI
-        ImGui::Begin("Map Editor");
-        ImGui::Text("Hello");
-        ImGui::End();
+        editorUi.draw();
         // Game Render
 
         SDL_SetRenderDrawColor(
@@ -155,11 +138,7 @@ void Engine::run()
         map.draw(renderer, tileset);
 
         //IMGUI RENDER
-        ImGui::Render();
-        ImGui_ImplSDLRenderer3_RenderDrawData(
-                ImGui::GetDrawData(),
-                renderer
-                );
+        editorUi.render(renderer);
 
         SDL_RenderPresent(renderer);
     }
@@ -170,6 +149,7 @@ void Engine::shutdown()
     running = false;
 
     tileset.unload();
+    editorUi.shutdown();
 
     if (renderer)
     {
