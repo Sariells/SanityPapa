@@ -13,6 +13,8 @@
 
 #include "MapEditor.h"
 #include "EditorContext.h"
+#include "TileEditor.h"
+
 
 class EditorUI {
 public:
@@ -24,6 +26,8 @@ public:
     void shutdown();
 private:
     MapEditor mapEditor;
+    TileEditor tileEditor;
+    EditorState editorState;
 };
 
 

@@ -39,6 +39,9 @@ src/assets/AssetManager.h
         src/editors/MapEditor.cpp
         src/editors/MapEditor.h
         src/editors/EditorContext.h
+        src/editors/EditorState.h
+        src/editors/TileEditor.cpp
+        src/editors/TileEditor.h
 )
 
 # =========================

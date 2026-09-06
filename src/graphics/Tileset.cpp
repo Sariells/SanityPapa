@@ -2,7 +2,6 @@
 
 #include <SDL3_image/SDL_image.h>
 #include <tinyxml2.h>
-#include <fmt/core.h>
 
 #include <filesystem>
 
@@ -229,7 +228,8 @@ bool Tileset::load(
 
 
     // Create texture
-
+    textureWidth = surface->w;
+    textureHeight = surface->h;
 
     texture = SDL_CreateTextureFromSurface(
                     renderer,
@@ -279,6 +279,8 @@ void Tileset::unload()
     tileHeight = 0;
     tileCount = 0;
     columns = 0;
+    textureWidth = 0;
+    textureHeight = 0;
 }
 
 void Tileset::draw(SDL_Renderer* renderer, float x, float y) const {
@@ -366,4 +368,16 @@ int Tileset::getTileCount() const
 int Tileset::getColumns() const
 {
     return columns;
+}
+
+SDL_Texture *Tileset::getTextureHandler() const {
+    return texture;
+}
+
+int Tileset::getTextureWidth()const {
+    return textureWidth;
+}
+
+int Tileset::getTextureHeight()const {
+    return textureHeight;
 }

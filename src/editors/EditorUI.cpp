@@ -32,6 +32,7 @@ void EditorUI::newFrame() {
 
 void EditorUI::drawEditors(EditorContext &context) {
    mapEditor.drawUI(context.currentMap);
+   tileEditor.drawUI(context.tileset,editorState);
 }
 
 void EditorUI::render(SDL_Renderer *renderer) {
