@@ -24,6 +24,9 @@ public:
 
     bool isInside(int x, int y) const;
 
+    int getWidth()const;
+    int getHeight()const;
+
 private:
     //Это наш размер карты будет
     int Width = 0;

@@ -55,3 +55,10 @@ void Map::draw(SDL_Renderer *renderer, const Tileset &tileset) const {
         }
     }
 }
+
+int Map::getHeight() const {
+    return Height;
+}
+int Map::getWidth() const {
+    return Width;
+}

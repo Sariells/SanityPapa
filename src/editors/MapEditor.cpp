@@ -16,9 +16,37 @@ void MapEditor::drawUI(std::optional<Map> &currentMap) {
             &newMapHeight
             );
 
+    if (newMapHeight > 0 && newMapWidth > 0){
+        int tileCount = newMapWidth * newMapHeight;
+        ImGui::Text(
+                "Map size: %d x %d",
+                newMapWidth,
+                newMapHeight
+                );
+        ImGui::Text(
+                "Tiles: %d",
+                tileCount
+                );
+    } else {
+        ImGui::Text(
+                "InvalidMap size"
+                );
+    }
+
+    if(currentMap){
+        ImGui::Text(
+                "Current Map: %d x %d",
+                currentMap->getWidth(),
+                currentMap->getHeight()
+                );
+    }
+
     if(ImGui::Button("Create new Map")){
         if (newMapHeight > 0 && newMapWidth > 0){
-            currentMap.emplace(newMapWidth,newMapHeight);
+            currentMap.emplace(
+                    newMapWidth,
+                    newMapHeight
+                               );
         }
     }
 
