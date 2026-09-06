@@ -8,7 +8,7 @@ int main()
 {
     const std::filesystem::path projectRoot = RPGMAKER_PROJECT_ROOT;
 
-    Engine engine(projectRoot, Map(10, 10));
+    Engine engine(projectRoot);
 
     if (!engine.initialize())
     {

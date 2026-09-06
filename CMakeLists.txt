@@ -36,6 +36,8 @@ src/assets/AssetManager.h
         src/map/Map.h
         src/editors/EditorUI.cpp
         src/editors/EditorUI.h
+        src/editors/MapEditor.cpp
+        src/editors/MapEditor.h
 )
 
 # =========================

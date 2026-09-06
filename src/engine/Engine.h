@@ -11,11 +11,12 @@
 #include "../editors/EditorUI.h"
 
 #include <filesystem>
+#include <optional>
 
 class Engine
 {
 public:
-    explicit Engine(const std::filesystem::path &projectRoot, Map map);
+    Engine(const std::filesystem::path &projectRoot);
 
     ~Engine();
 
@@ -36,6 +37,6 @@ private:
 
     AssetManager assets;
     Tileset tileset;
-    Map map;
+    std::optional<Map> currentMap;
     EditorUI editorUi;
 };

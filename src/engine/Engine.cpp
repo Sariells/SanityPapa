@@ -3,8 +3,8 @@
 
 #include <fmt/core.h>
 
-Engine::Engine(const std::filesystem::path &projectRoot, Map map)
-        : assets(projectRoot), map(map) {
+Engine::Engine(const std::filesystem::path &projectRoot)
+        : assets(projectRoot) {
 }
 
 Engine::~Engine()
@@ -135,7 +135,9 @@ void Engine::run()
         SDL_RenderClear(renderer);
 
         // Тестовый тайл.
-        map.draw(renderer, tileset);
+        if(currentMap){
+            currentMap->draw(renderer, tileset);
+        }
 
         //IMGUI RENDER
         editorUi.render(renderer);
