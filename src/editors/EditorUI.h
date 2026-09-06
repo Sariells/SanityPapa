@@ -11,16 +11,19 @@
 #include <imgui_impl_sdlrenderer3.h>
 #include <fmt/core.h>
 
+#include "MapEditor.h"
+#include "EditorContext.h"
+
 class EditorUI {
 public:
     bool initialize(SDL_Window* window, SDL_Renderer* renderer);
     void processEvent(SDL_Event& event);
     void newFrame();
-    void draw();
+    void drawEditors(EditorContext& context);
     void render(SDL_Renderer* renderer);
     void shutdown();
-
-
+private:
+    MapEditor mapEditor;
 };
 
 

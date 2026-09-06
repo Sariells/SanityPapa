@@ -30,10 +30,8 @@ void EditorUI::newFrame() {
     ImGui::NewFrame();
 }
 
-void EditorUI::draw() {
-    ImGui::Begin("Map Editor");
-    ImGui::Text("Hello");
-    ImGui::End();
+void EditorUI::drawEditors(EditorContext &context) {
+   mapEditor.drawUI(context.currentMap);
 }
 
 void EditorUI::render(SDL_Renderer *renderer) {

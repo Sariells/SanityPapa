@@ -5,9 +5,20 @@
 #ifndef RPGMAKER_MAPEDITOR_H
 #define RPGMAKER_MAPEDITOR_H
 
+#include <imgui.h>
+
+#include <optional>
+
+#include "../map/Map.h"
 
 class MapEditor {
+public:
+    void drawUI(std::optional<Map>& currentMap);
 
+
+private:
+    int newMapWidth = 10;
+    int newMapHeight = 10;
 };
 
 

@@ -16,7 +16,7 @@
 class Engine
 {
 public:
-    Engine(const std::filesystem::path &projectRoot);
+    explicit Engine(const std::filesystem::path &projectRoot);
 
     ~Engine();
 
@@ -35,8 +35,14 @@ private:
     SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
 
+
     AssetManager assets;
     Tileset tileset;
     std::optional<Map> currentMap;
     EditorUI editorUi;
+
+    EditorContext context{
+        currentMap,
+        tileset
+    };
 };

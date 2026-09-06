@@ -121,7 +121,7 @@ void Engine::run()
         editorUi.newFrame();
 
         //GUI
-        editorUi.draw();
+        editorUi.drawEditors(context);
         // Game Render
 
         SDL_SetRenderDrawColor(
