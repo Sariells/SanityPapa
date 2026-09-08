@@ -4,6 +4,15 @@
 
 #include "MapEditor.h"
 
+mapXY MapEditor::calculateMapXY(const Tileset& tileset)const {
+    ImVec2 MousePosition = ImGui::GetMousePos();
+
+    int mapX = static_cast<int>(MousePosition.x) / tileset.getTileWidth();
+    int mapY = static_cast<int>(MousePosition.y) / tileset.getTileHeight();
+
+    return{mapX,mapY};
+}
+
 void MapEditor::drawUI(std::optional<Map> &currentMap) {
     ImGui::Begin("Map Editor");
 
@@ -51,4 +60,21 @@ void MapEditor::drawUI(std::optional<Map> &currentMap) {
     }
 
     ImGui::End();
+}
+
+void MapEditor::handleMapInput(std::optional<Map> &currentMap, const Tileset &tileset, const EditorState &editorState) {
+    if(currentMap &&
+    editorState.selectedTileID >= 0 &&
+    !ImGui::GetIO().WantCaptureMouse &&
+    ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+
+    {
+        mapXY position = calculateMapXY(tileset);
+
+        currentMap->setTile(
+                position.x,
+                position.y,
+                editorState.selectedTileID
+                );
+    }
 }

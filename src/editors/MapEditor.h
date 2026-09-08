@@ -10,15 +10,29 @@
 #include <optional>
 
 #include "../map/Map.h"
+#include "EditorState.h"
+
+struct mapXY{
+    int x;
+    int y;
+};
 
 class MapEditor {
 public:
     void drawUI(std::optional<Map>& currentMap);
 
+    void handleMapInput(std::optional<Map>& currentMap,
+                        const Tileset& tileset,
+                        const EditorState& editorState);
 
 private:
+
     int newMapWidth = 10;
     int newMapHeight = 10;
+
+    mapXY calculateMapXY(
+            const Tileset& tileset
+            )const;
 };
 
 

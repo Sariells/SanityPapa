@@ -11,8 +11,11 @@
 
 #include "../map/Map.h"
 #include "../graphics/Tileset.h"
+#include "EditorState.h"
+
 
 struct EditorContext{
     std::optional<Map>& currentMap;
     Tileset& tileset;
+    EditorState& editorState;
 };

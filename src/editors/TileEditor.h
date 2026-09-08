@@ -11,23 +11,27 @@
 
 #include "../graphics/Tileset.h"
 #include "EditorState.h"
-struct TileUV
+
+struct MouseXY
 {
-    ImVec2 start;
-    ImVec2 end;
+    int localX;
+    int localY;
 };
 
 class TileEditor {
 public:
-
     void drawUI(const   Tileset& tileset,
                         EditorState& editorState
                         );
-
-    TileUV calculateTileUV(
-            int tileID,
+private:
+    int calculateTileID(
+            MouseXY cords,
             const Tileset& tileset
     ) const;
+
+    MouseXY calculateMouseXY()const;
+
+    ImVec2 calculateImageSize(const Tileset& tileset)const;
 };
 
 

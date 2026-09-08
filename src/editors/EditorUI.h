@@ -27,7 +27,6 @@ public:
 private:
     MapEditor mapEditor;
     TileEditor tileEditor;
-    EditorState editorState;
 };
 
 

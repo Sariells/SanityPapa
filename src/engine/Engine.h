@@ -10,6 +10,7 @@
 #include "../map/Map.h"
 #include "../editors/EditorUI.h"
 
+
 #include <filesystem>
 #include <optional>
 
@@ -39,10 +40,14 @@ private:
     AssetManager assets;
     Tileset tileset;
     std::optional<Map> currentMap;
+
+    EditorState editorState;
     EditorUI editorUi;
+
 
     EditorContext context{
         currentMap,
-        tileset
+        tileset,
+        editorState,
     };
 };
