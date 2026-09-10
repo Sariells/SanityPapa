@@ -18,20 +18,30 @@ struct MouseXY
     int localY;
 };
 
+struct TileStartEnd{
+    ImVec2 start;
+    ImVec2 end;
+};
+
 class TileEditor {
 public:
-    void drawUI(const   Tileset& tileset,
+    static void drawUI( Tileset& tileset,
                         EditorState& editorState
                         );
 private:
-    int calculateTileID(
+    static int calculateTileID(
             MouseXY cords,
             const Tileset& tileset
-    ) const;
+    ) ;
 
-    MouseXY calculateMouseXY()const;
+    static MouseXY calculateMouseXY();
 
-    ImVec2 calculateImageSize(const Tileset& tileset)const;
+    static ImVec2  calculateImageSize(const Tileset& tileset);
+
+    static TileStartEnd calculateTileStartEnd(Tileset &tileset);
+
+    static void drawHoverTile(Tileset &tileset);
+
 };
 
 

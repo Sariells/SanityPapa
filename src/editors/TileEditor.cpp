@@ -6,7 +6,7 @@
 
 
 
-MouseXY TileEditor::calculateMouseXY() const {
+MouseXY TileEditor::calculateMouseXY() {
     ImVec2 imagePosition = ImGui::GetItemRectMin();
     ImVec2 mousePosition = ImGui::GetMousePos();
 
@@ -15,7 +15,7 @@ MouseXY TileEditor::calculateMouseXY() const {
     return {localX,localY};
 }
 
-ImVec2 TileEditor::calculateImageSize(const Tileset &tileset)const {
+ImVec2 TileEditor::calculateImageSize(const Tileset &tileset) {
     ImVec2 imageSize(
             static_cast<float>(tileset.getTextureWidth()),
             static_cast<float>(tileset.getTextureHeight())
@@ -23,7 +23,7 @@ ImVec2 TileEditor::calculateImageSize(const Tileset &tileset)const {
     return imageSize;
 }
 
-int TileEditor::calculateTileID(MouseXY cords, const Tileset& tileset) const {
+int TileEditor::calculateTileID(MouseXY cords, const Tileset& tileset) {
     int tileColumn = cords.localX / tileset.getTileWidth();
     int tileRow = cords.localY / tileset.getTileHeight();
 
@@ -41,7 +41,40 @@ int TileEditor::calculateTileID(MouseXY cords, const Tileset& tileset) const {
     return -1;
 }
 
-void TileEditor::drawUI(const Tileset &tileset, EditorState &editorState) {
+TileStartEnd TileEditor::calculateTileStartEnd(Tileset &tileset) {
+    ImVec2 imageposition = ImGui::GetItemRectMin();
+    MouseXY cords = calculateMouseXY();
+
+    int tileColumn = cords.localX / tileset.getTileWidth();
+    int tileRow = cords.localY / tileset.getTileHeight();
+
+    auto TileScreenX = imageposition.x + static_cast<float>(tileColumn * tileset.getTileWidth());
+    auto TileScreenY = imageposition.y + static_cast<float>(tileRow * tileset.getTileHeight());
+
+    auto TileEndX = TileScreenX + static_cast<float>(tileset.getTileWidth());
+    auto TileEndY = TileScreenY + static_cast<float>(tileset.getTileHeight());
+
+    ImVec2 tileStart{
+            TileScreenX,
+            TileScreenY
+    };
+    ImVec2 tileEnd{
+            TileEndX,
+            TileEndY
+    };
+    return {tileStart,tileEnd};
+}
+
+void TileEditor::drawHoverTile(Tileset &tileset) {
+    TileStartEnd startEnd = calculateTileStartEnd(tileset);
+    ImGui::GetWindowDrawList()->AddRect(
+                startEnd.start,
+                startEnd.end,
+                IM_COL32(255,255,255,255)
+            );
+}
+
+void TileEditor::drawUI(Tileset &tileset, EditorState &editorState) {
     SDL_Texture* texture = tileset.getTextureHandler();
 
     if(!texture){
@@ -62,6 +95,9 @@ void TileEditor::drawUI(const Tileset &tileset, EditorState &editorState) {
                 uvEnd
                 );
 
+    if(ImGui::IsItemHovered()){
+        drawHoverTile(tileset);
+    }
     if(ImGui::IsMouseClicked(ImGuiMouseButton_Left) && ImGui::IsItemHovered()){
 
         MouseXY cords = calculateMouseXY();

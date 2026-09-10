@@ -22,16 +22,16 @@ find_package(imgui CONFIG REQUIRED)
 # =========================
 
 add_executable(Rpgmaker
-src/main.cpp
+        src/main.cpp
 
-src/engine/Engine.cpp
-src/engine/Engine.h
+        src/engine/Engine.cpp
+        src/engine/Engine.h
 
-src/graphics/Tileset.cpp
-src/graphics/Tileset.h
+        src/graphics/Tileset.cpp
+        src/graphics/Tileset.h
 
-src/assets/AssetManager.cpp
-src/assets/AssetManager.h
+        src/assets/AssetManager.cpp
+        src/assets/AssetManager.h
         src/map/Map.cpp
         src/map/Map.h
         src/editors/EditorUI.cpp

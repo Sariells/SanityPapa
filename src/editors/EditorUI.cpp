@@ -32,7 +32,7 @@ void EditorUI::newFrame() {
 
 void EditorUI::drawEditors(EditorContext &context) {
    mapEditor.drawUI(context.currentMap);
-   tileEditor.drawUI(context.tileset,context.editorState);
+   TileEditor::drawUI(context.tileset,context.editorState);
 
    mapEditor.handleMapInput(context.currentMap,context.tileset,context.editorState);
 }

@@ -18,12 +18,12 @@
 
 class EditorUI {
 public:
-    bool initialize(SDL_Window* window, SDL_Renderer* renderer);
-    void processEvent(SDL_Event& event);
-    void newFrame();
+    static bool initialize(SDL_Window* window, SDL_Renderer* renderer);
+    static void processEvent(SDL_Event& event);
+    static void newFrame();
     void drawEditors(EditorContext& context);
-    void render(SDL_Renderer* renderer);
-    void shutdown();
+    static void render(SDL_Renderer* renderer);
+    static void shutdown();
 private:
     MapEditor mapEditor;
     TileEditor tileEditor;
