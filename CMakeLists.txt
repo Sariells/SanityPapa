@@ -44,8 +44,8 @@ add_executable(Rpgmaker
         src/editors/panels/TileEditor.h
         src/editors/tools/MapTools.cpp
         src/editors/tools/MapTools.h
-        src/editors/ToolPanel.cpp
-        src/editors/ToolPanel.h
+        src/editors/panels/ToolPanel.cpp
+        src/editors/panels/ToolPanel.h
 )
 
 # =========================

@@ -31,10 +31,11 @@ void EditorUI::newFrame() {
 }
 
 void EditorUI::drawEditors(EditorContext &context) {
-   mapEditor.drawUI(context.currentMap);
-   TileEditor::drawUI(context.tileset,context.editorState);
+   mapCreatorDialog.drawUI(context.currentMap);
 
-   mapEditor.handleMapInput(context.currentMap,context.tileset,context.editorState);
+   tileEditor.drawUI(context.tileset,context.editorState);
+
+   mapTools.handleMapInput(context.currentMap,context.tileset,context.editorState);
 }
 
 void EditorUI::render(SDL_Renderer *renderer) {

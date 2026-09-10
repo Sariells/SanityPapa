@@ -12,9 +12,10 @@
 #include "fmt/core.h"
 
 #include "MapCreatorDialog.h"
-#include "../EditorContext.h"
 #include "TileEditor.h"
 
+#include "../EditorContext.h"
+#include "../tools/MapTools.h"
 
 class EditorUI {
 public:
@@ -25,8 +26,9 @@ public:
     static void render(SDL_Renderer* renderer);
     static void shutdown();
 private:
-    MapCreatorDialog mapEditor;
+    MapCreatorDialog mapCreatorDialog;
     TileEditor tileEditor;
+    MapTools mapTools;
 };
 
 
