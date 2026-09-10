@@ -41,12 +41,8 @@ int TileEditor::calculateTileID(MouseXY cords, const Tileset& tileset) {
     return -1;
 }
 
-TileStartEnd TileEditor::calculateTileStartEnd(Tileset &tileset) {
+TileStartEnd TileEditor::calculateTileStartEnd(Tileset &tileset, int tileColumn, int tileRow) {
     ImVec2 imageposition = ImGui::GetItemRectMin();
-    MouseXY cords = calculateMouseXY();
-
-    int tileColumn = cords.localX / tileset.getTileWidth();
-    int tileRow = cords.localY / tileset.getTileHeight();
 
     auto TileScreenX = imageposition.x + static_cast<float>(tileColumn * tileset.getTileWidth());
     auto TileScreenY = imageposition.y + static_cast<float>(tileRow * tileset.getTileHeight());
@@ -66,12 +62,29 @@ TileStartEnd TileEditor::calculateTileStartEnd(Tileset &tileset) {
 }
 
 void TileEditor::drawHoverTile(Tileset &tileset) {
-    TileStartEnd startEnd = calculateTileStartEnd(tileset);
+    MouseXY cords = calculateMouseXY();
+
+    int tileColumn = cords.localX / tileset.getTileWidth();
+    int tileRow = cords.localY / tileset.getTileHeight();
+
+    TileStartEnd startEnd = calculateTileStartEnd(tileset, tileColumn,tileRow);
     ImGui::GetWindowDrawList()->AddRect(
                 startEnd.start,
                 startEnd.end,
                 IM_COL32(255,255,255,255)
             );
+}
+
+void TileEditor::drawSelectedTile(int tileID, Tileset &tileset) {
+    int tileColumn = tileID % tileset.getColumns();
+    int tileRow = tileID / tileset.getColumns();
+
+    TileStartEnd startEnd = calculateTileStartEnd(tileset,tileColumn,tileRow);
+    ImGui::GetWindowDrawList()->AddRect(
+            startEnd.start,
+            startEnd.end,
+            IM_COL32(255,255,255,255)
+    );
 }
 
 void TileEditor::drawUI(Tileset &tileset, EditorState &editorState) {
@@ -98,6 +111,11 @@ void TileEditor::drawUI(Tileset &tileset, EditorState &editorState) {
     if(ImGui::IsItemHovered()){
         drawHoverTile(tileset);
     }
+
+    if (editorState.selectedTileID >= 0){
+        drawSelectedTile(editorState.selectedTileID,tileset);
+    }
+
     if(ImGui::IsMouseClicked(ImGuiMouseButton_Left) && ImGui::IsItemHovered()){
 
         MouseXY cords = calculateMouseXY();
@@ -106,6 +124,7 @@ void TileEditor::drawUI(Tileset &tileset, EditorState &editorState) {
             editorState.selectedTileID = tileID;
         }
     }
+
     ImGui::Text(
             "Selected tile ID: %d",
             editorState.selectedTileID

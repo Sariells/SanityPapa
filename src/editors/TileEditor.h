@@ -38,10 +38,12 @@ private:
 
     static ImVec2  calculateImageSize(const Tileset& tileset);
 
-    static TileStartEnd calculateTileStartEnd(Tileset &tileset);
+    static TileStartEnd calculateTileStartEnd(Tileset &tileset,int tileColumn,int tileRow);
 
     static void drawHoverTile(Tileset &tileset);
 
+    static void drawSelectedTile(int tileID,
+                                 Tileset& tileset);
 };
 
 
