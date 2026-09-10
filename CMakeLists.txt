@@ -34,14 +34,18 @@ add_executable(Rpgmaker
         src/assets/AssetManager.h
         src/map/Map.cpp
         src/map/Map.h
-        src/editors/EditorUI.cpp
-        src/editors/EditorUI.h
-        src/editors/MapEditor.cpp
-        src/editors/MapEditor.h
+        src/editors/panels/EditorUI.cpp
+        src/editors/panels/EditorUI.h
+        src/editors/panels/MapCreatorDialog.cpp
+        src/editors/panels/MapCreatorDialog.h
         src/editors/EditorContext.h
         src/editors/EditorState.h
-        src/editors/TileEditor.cpp
-        src/editors/TileEditor.h
+        src/editors/panels/TileEditor.cpp
+        src/editors/panels/TileEditor.h
+        src/editors/tools/MapTools.cpp
+        src/editors/tools/MapTools.h
+        src/editors/ToolPanel.cpp
+        src/editors/ToolPanel.h
 )
 
 # =========================
