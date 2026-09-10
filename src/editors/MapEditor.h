@@ -8,6 +8,7 @@
 #include <imgui.h>
 
 #include <optional>
+#include <math.h>
 
 #include "../map/Map.h"
 #include "EditorState.h"
@@ -30,9 +31,20 @@ private:
     int newMapWidth = 10;
     int newMapHeight = 10;
 
+    int lastPaintX = -1;
+    int lastPaintY = -1;
+    bool hasLast = false;
+
     mapXY calculateMapXY(
             const Tileset& tileset
             )const;
+
+    void paintLine(Map &map,
+                   int endX,
+                   int endY,
+                   int startX,
+                   int startY,
+                   int tileID);
 };
 
 
