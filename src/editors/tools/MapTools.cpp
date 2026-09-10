@@ -3,7 +3,7 @@
 //
 
 #include "MapTools.h"
-//Алгоритм Брезенхэма
+
 mapXY MapTools::calculateMapXY(const Tileset& tileset)const {
     ImVec2 MousePosition = ImGui::GetMousePos();
 
@@ -12,7 +12,7 @@ mapXY MapTools::calculateMapXY(const Tileset& tileset)const {
 
     return{mapX,mapY};
 }
-
+//Алгоритм Брезенхэма для рисование ровных линий
 void MapTools::paintLine(Map& map,  int startX, int startY, int endX, int endY, int tileID) {
     int dx = std::abs(startX - endX);
     int dy = std::abs(startY - endY);

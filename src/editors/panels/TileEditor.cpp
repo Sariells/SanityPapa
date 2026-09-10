@@ -41,6 +41,7 @@ int TileEditor::calculateTileID(MouseXY cords, const Tileset& tileset) {
     return -1;
 }
 
+//Ищем начало тайла на текстуре и конец
 TileStartEnd TileEditor::calculateTileStartEnd(Tileset &tileset, int tileColumn, int tileRow) {
     ImVec2 imageposition = ImGui::GetItemRectMin();
 
@@ -60,7 +61,7 @@ TileStartEnd TileEditor::calculateTileStartEnd(Tileset &tileset, int tileColumn,
     };
     return {tileStart,tileEnd};
 }
-
+//Рисуем квадрат на тайлах которые сейчас можно нажать
 void TileEditor::drawHoverTile(Tileset &tileset) {
     MouseXY cords = calculateMouseXY();
 
@@ -74,7 +75,7 @@ void TileEditor::drawHoverTile(Tileset &tileset) {
                 IM_COL32(255,255,255,255)
             );
 }
-
+//Рисуем квадрат вокруг выбраного тайла
 void TileEditor::drawSelectedTile(int tileID, Tileset &tileset) {
     int tileColumn = tileID % tileset.getColumns();
     int tileRow = tileID / tileset.getColumns();
@@ -86,7 +87,7 @@ void TileEditor::drawSelectedTile(int tileID, Tileset &tileset) {
             IM_COL32(255,255,255,255)
     );
 }
-
+//Рисуем UI
 void TileEditor::drawUI(Tileset &tileset, EditorState &editorState) {
     SDL_Texture* texture = tileset.getTextureHandler();
 
