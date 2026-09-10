@@ -35,3 +35,4 @@
 
 /vcpkg_installed/
 /cmake-build-debug/
+/.idea/
