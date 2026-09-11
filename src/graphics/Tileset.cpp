@@ -1,9 +1,6 @@
 #include "Tileset.h"
 
-#include <SDL3_image/SDL_image.h>
-#include <tinyxml2.h>
 
-#include <filesystem>
 
 using namespace tinyxml2;
 

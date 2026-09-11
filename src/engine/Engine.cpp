@@ -87,7 +87,7 @@ bool Engine::initialize()
         return false;
     }
 
-    editorUi.initialize(window,renderer);
+    editorUi.initialize(window,renderer,assets);
 
     // Engine ready
 

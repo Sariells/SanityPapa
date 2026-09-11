@@ -4,7 +4,7 @@
 
 #include "EditorUI.h"
 
-bool EditorUI::initialize(SDL_Window* window, SDL_Renderer *renderer) {
+bool EditorUI::initialize(SDL_Window *window, SDL_Renderer *renderer,const AssetManager& assetManager) {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGui::StyleColorsDark();
@@ -16,6 +16,11 @@ bool EditorUI::initialize(SDL_Window* window, SDL_Renderer *renderer) {
     if(!ImGui_ImplSDLRenderer3_Init(renderer)){
         fmt::print("ImGui SDL3Render init error\n");
         return  false;
+    }
+    if (!toolPanel.initialize(renderer, assetManager))
+    {
+        fmt::print("ToolPanel init error\n");
+        return false;
     }
     return true;
 }
@@ -32,8 +37,8 @@ void EditorUI::newFrame() {
 
 void EditorUI::drawEditors(EditorContext &context) {
    mapCreatorDialog.drawUI(context.currentMap);
-
    tileEditor.drawUI(context.tileset,context.editorState);
+   toolPanel.drawUI(context.editorState);
 
    mapTools.handleMapInput(context.currentMap,context.tileset,context.editorState);
 }

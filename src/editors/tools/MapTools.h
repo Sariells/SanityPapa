@@ -8,9 +8,11 @@
 #include "imgui.h"
 
 #include <optional>
+#include <algorithm>
 
 #include "../../map/Map.h"
 #include "../EditorState.h"
+
 
 struct mapXY{
     int x;
@@ -19,17 +21,22 @@ struct mapXY{
 
 class MapTools {
 public:
-    void brush();
-    void erase();
-    void fill();
 
-    void handleMapInput(std::optional<Map> &currentMap,
-                        const Tileset &tileset,
-                        const EditorState &editorState);
+void handleMapInput(std::optional<Map> &currentMap,
+                    const Tileset &tileset,
+                    const EditorState &editorState
+                    );
+
+
 private:
+// Stores the previous mouse tile to keep a continuous stroke between frames.
     int lastPaintX = -1;
     int lastPaintY = -1;
     bool hasLast = false;
+//
+    int startX = -1;
+    int startY = -1;
+    bool hasFillStart = false;
 
     void paintLine(Map& map,
                    int startX,
@@ -41,6 +48,15 @@ private:
     mapXY calculateMapXY(
             const Tileset& tileset
     )const;
+
+    void brush(std::optional<Map> &currentMap,
+               const Tileset &tileset,
+               const EditorState &editorState);
+
+    void eraser(std::optional<Map> &currentMap,
+               const Tileset &tileset);
+
+    void fill(std::optional<Map> &currentMap,const Tileset &tileset,const EditorState &editorState);
 };
 
 
