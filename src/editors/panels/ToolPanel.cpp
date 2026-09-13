@@ -20,7 +20,8 @@ bool ToolPanel::initialize(SDL_Renderer *renderer,
             "Loading Icon: {}\n",
             IconDirectory.string()
     );
-
+    //Load all Icon from directory and save. In icons
+    //Example "brush.png" -> icons[brush]
     for(const auto& entry : std::filesystem::directory_iterator(IconDirectory)){
 
         const auto path = entry.path();
@@ -36,7 +37,7 @@ bool ToolPanel::initialize(SDL_Renderer *renderer,
         if (!surface)
         {
             fmt::print(
-                    "Failed to load brush icon: {}\n",
+                    "Failed to load  icon: {}\n",
                     SDL_GetError());
 
             return false;
@@ -46,9 +47,9 @@ bool ToolPanel::initialize(SDL_Renderer *renderer,
         if (!texture)
         {
             fmt::print(
-                    "Failed to create brush texture: {}\n",
+                    "Failed to create icon texture'{}': {}\n",
+                    iconName,
                     SDL_GetError());
-
             return false;
         }
         icons[iconName] = texture;
@@ -59,8 +60,8 @@ bool ToolPanel::initialize(SDL_Renderer *renderer,
 void ToolPanel::drawUI(EditorState& editorState)
 {
     ImGui::Begin("Tools");
-
     ImGui::BeginGroup();
+
     if (icons["brush"])
     {
         if (ImGui::ImageButton(
@@ -71,9 +72,11 @@ void ToolPanel::drawUI(EditorState& editorState)
             editorState.currentTool = EditorTools::Brush;
         }
     }
+
     ImGui::EndGroup();
     ImGui::SameLine();
     ImGui::BeginGroup();
+
     if (icons["eraser"])
     {
         if (ImGui::ImageButton(
@@ -84,9 +87,11 @@ void ToolPanel::drawUI(EditorState& editorState)
             editorState.currentTool = EditorTools::Eraser;
         }
     }
+
     ImGui::EndGroup();
     ImGui::SameLine();
     ImGui::BeginGroup();
+
     if (icons["fill_color"])
     {
         if (ImGui::ImageButton(
@@ -97,6 +102,7 @@ void ToolPanel::drawUI(EditorState& editorState)
             editorState.currentTool = EditorTools::Fill_Color;
         }
     }
+
     ImGui::EndGroup();
     ImGui::End();
 }
