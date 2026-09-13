@@ -32,10 +32,12 @@ void MapTools::brush(std::optional<Map> &currentMap,
                      const Tileset &tileset,
                      const EditorState &editorState){
 
-    if(currentMap &&
-       editorState.selectedTileID >= 0 &&
-       !ImGui::GetIO().WantCaptureMouse &&
-       ImGui::IsMouseDown(ImGuiMouseButton_Left)){
+        if( !currentMap ||
+            ImGui::GetIO().WantCaptureMouse ||
+            !ImGui::IsMouseDown(ImGuiMouseButton_Left)){
+            hasLast = false;
+            return;
+        }
 
         mapXY position = calculateMapXY(tileset);
 
@@ -64,11 +66,6 @@ void MapTools::brush(std::optional<Map> &currentMap,
             lastPaintY = position.y;
         }
     }
-    if(!ImGui::IsMouseDown(ImGuiMouseButton_Left)){
-        hasLast = false;
-        return;
-    }
-}
 
 void MapTools::eraser(std::optional<Map> &currentMap,
                       const Tileset &tileset
@@ -121,43 +118,66 @@ void MapTools::fill_color(std::optional<Map> &currentMap,
     {
         return;
     }
-
-    if (!ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+    if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
     {
-        return;
-    }
+        mapXY position = calculateMapXY(tileset);
 
-    mapXY position = calculateMapXY(tileset);
-
-    if (!currentMap->isInside(position.x, position.y))
-    {
-        return;
-    }
-
-        if(!hasFillStart){
+        if (currentMap->isInside(position.x, position.y))
+        {
             startX = position.x;
             startY = position.y;
             hasFillStart = true;
-        } else {
-            const int endX = position.x;
-            const int endY = position.y;
-
-            const int minX = std::min(startX, endX);
-            const int maxX = std::max(startX, endX);
-
-            const int minY = std::min(startY, endY);
-            const int maxY = std::max(startY, endY);
-
-            for(int y = minY;y <= maxY; ++y){
-                for(int x = minX;x <= maxX; ++x){
-                    currentMap->setTile(x,y,editorState.selectedTileID);
-                }
-            }
-            hasFillStart = false;
         }
+    }
+    if (hasFillStart &&
+        ImGui::IsMouseDown(ImGuiMouseButton_Left))
+    {
+        mapXY position = calculateMapXY(tileset);
+        MinMax m = calculateMinMax(position);
+
+        fill_color_Preview(m.minX,m.maxX,m.minY,m.maxY,tileset);
+        // текущая position — это временный конец прямоугольника
+    }
+    if (hasFillStart &&
+        ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+    {
+        mapXY position = calculateMapXY(tileset);
+        MinMax m = calculateMinMax(position);
+
+        for(int y = m.minY;y <= m.maxY; ++y){
+            for(int x = m.minX;x <= m.maxX; ++x){
+                currentMap->setTile(x,y,editorState.selectedTileID);
+            }
+        }
+        hasFillStart = false;
+        // position теперь окончательный end
+    }
+
 }
 
-mapXY MapTools::calculateMapXY(const Tileset& tileset)const {
+void MapTools::fill_color_Preview(int minX,
+                                  int endX,
+                                  int minY,
+                                  int endY,
+                                  const Tileset &tileset) {
+
+    int screenStartX = minX * tileset.getTileWidth();
+    int screenStartY = minY * tileset.getTileHeight();
+
+    int screenEndX = (endX + 1) * tileset.getTileWidth();
+    int screenEndY = (endY + 1) * tileset.getTileHeight();
+
+    ImVec2 uv0(screenStartX,screenStartY);
+    ImVec2 uv1(screenEndX, screenEndY);
+
+    ImGui::GetForegroundDrawList()->AddRect(
+            uv0,
+            uv1,
+            IM_COL32(255,255,255,255)
+            );
+}
+
+mapXY MapTools::calculateMapXY(const Tileset& tileset) {
     //supposed what the map start at screen position (0,0) Later need add zoom and camera
     ImVec2 MousePosition = ImGui::GetMousePos();
 
@@ -165,6 +185,19 @@ mapXY MapTools::calculateMapXY(const Tileset& tileset)const {
     int mapY = static_cast<int>(MousePosition.y) / tileset.getTileHeight();
 
     return{mapX,mapY};
+}
+
+MinMax MapTools::calculateMinMax(mapXY &position) {
+    const int X = position.x;
+    const int Y = position.y;
+
+    const int minX = std::min(startX, X);
+    const int maxX = std::max(startX, X);
+
+    const int minY = std::min(startY, Y);
+    const int maxY = std::max(startY, Y);
+
+    return {minX,minY,maxX,maxY};
 }
 // Fills gaps between mouse positions so fast brush strokes remain continuous.
 // Uses Bresenham's line algorithm.

@@ -18,6 +18,13 @@ struct mapXY{
     int x;
     int y;
 };
+struct MinMax{
+    int minX;
+    int minY;
+
+    int maxX;
+    int maxY;
+};
 
 class MapTools {
 public:
@@ -38,16 +45,17 @@ private:
     int startY = -1;
     bool hasFillStart = false;
 
-    void paintLine(Map& map,
+    static void paintLine(Map& map,
                    int startX,
                    int startY,
                    int endX,
                    int endY,
                    int tileID);
 
-    mapXY calculateMapXY(
-            const Tileset& tileset
-    )const;
+    [[nodiscard]]
+    static mapXY calculateMapXY(const Tileset& tileset);
+
+    MinMax calculateMinMax(mapXY& mapXY);
 
     void brush(std::optional<Map> &currentMap,
                const Tileset &tileset,
@@ -56,7 +64,16 @@ private:
     void eraser(std::optional<Map> &currentMap,
                const Tileset &tileset);
 
-    void  fill_color(std::optional<Map> &currentMap,const Tileset &tileset,const EditorState &editorState);
+    void  fill_color(std::optional<Map> &currentMap,
+                     const Tileset &tileset,
+                     const EditorState &editorState);
+
+    static void fill_color_Preview(int minX,
+                            int endX,
+                            int minY,
+                            int endY,
+                            const Tileset &tileset);
+
 };
 
 
