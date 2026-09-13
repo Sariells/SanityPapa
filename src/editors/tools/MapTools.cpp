@@ -20,8 +20,8 @@ void MapTools::handleMapInput(std::optional<Map> &currentMap,
         case EditorTools::Eraser:
             eraser(currentMap,tileset);
             break;
-        case EditorTools::Fill:
-            fill(currentMap,tileset,editorState);
+        case EditorTools::Fill_Color:
+            fill_color(currentMap,tileset,editorState);
             break;
         default:
             break;
@@ -112,26 +112,41 @@ void MapTools::eraser(std::optional<Map> &currentMap,
     }
 }
 
-void MapTools::fill(std::optional<Map> &currentMap,
-                    const Tileset &tileset,
-                    const EditorState &editorState) {
+void MapTools::fill_color(std::optional<Map> &currentMap,
+                          const Tileset &tileset,
+                          const EditorState &editorState) {
+    if (!currentMap ||
+        editorState.selectedTileID < 0 ||
+        ImGui::GetIO().WantCaptureMouse)
+    {
+        return;
+    }
 
-    if(ImGui::IsMouseClicked(ImGuiMouseButton_Left)){
-        mapXY position = calculateMapXY(tileset);
+    if (!ImGui::IsMouseClicked(ImGuiMouseButton_Left))
+    {
+        return;
+    }
+
+    mapXY position = calculateMapXY(tileset);
+
+    if (!currentMap->isInside(position.x, position.y))
+    {
+        return;
+    }
+
         if(!hasFillStart){
             startX = position.x;
             startY = position.y;
             hasFillStart = true;
-
         } else {
-            int endX = position.x;
-            int endY = position.y;
+            const int endX = position.x;
+            const int endY = position.y;
 
-            int minX = std::min(startX, endX);
-            int maxX = std::max(startX, endX);
+            const int minX = std::min(startX, endX);
+            const int maxX = std::max(startX, endX);
 
-            int minY = std::min(startY, endY);
-            int maxY = std::max(startY, endY);
+            const int minY = std::min(startY, endY);
+            const int maxY = std::max(startY, endY);
 
             for(int y = minY;y <= maxY; ++y){
                 for(int x = minX;x <= maxX; ++x){
@@ -140,7 +155,6 @@ void MapTools::fill(std::optional<Map> &currentMap,
             }
             hasFillStart = false;
         }
-    }
 }
 
 mapXY MapTools::calculateMapXY(const Tileset& tileset)const {

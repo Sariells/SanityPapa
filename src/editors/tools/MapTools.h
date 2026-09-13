@@ -56,7 +56,7 @@ private:
     void eraser(std::optional<Map> &currentMap,
                const Tileset &tileset);
 
-    void fill(std::optional<Map> &currentMap,const Tileset &tileset,const EditorState &editorState);
+    void  fill_color(std::optional<Map> &currentMap,const Tileset &tileset,const EditorState &editorState);
 };
 
 

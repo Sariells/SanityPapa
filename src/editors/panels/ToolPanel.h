@@ -10,6 +10,9 @@
 #include "fmt/core.h"
 #include <SDL3_image/SDL_image.h>
 
+#include <filesystem>
+#include <string>
+#include <unordered_map>
 
 #include "../EditorState.h"
 #include "../../assets/AssetManager.h"
@@ -20,9 +23,8 @@ public:
 
     void drawUI(EditorState& editorState);
 private:
-    SDL_Texture* brushIcon = nullptr;
-    SDL_Texture* eraserIcon = nullptr;
-    SDL_Texture* fillIcon = nullptr;
+    std::unordered_map<std::string,SDL_Texture*> icons;
+
 };
 
 

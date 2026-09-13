@@ -8,7 +8,7 @@ enum class EditorTools{
     None, //Only before pick any tool
     Brush,
     Eraser,
-    Fill
+    Fill_Color
 };
 struct EditorState{
     int selectedTileID = -1;
