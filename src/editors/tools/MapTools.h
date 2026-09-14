@@ -55,7 +55,7 @@ private:
     [[nodiscard]]
     static mapXY calculateMapXY(const Tileset& tileset);
 
-    MinMax calculateMinMax(mapXY& mapXY);
+    MinMax calculateMinMax(mapXY& mapXY) const;
 
     void brush(std::optional<Map> &currentMap,
                const Tileset &tileset,

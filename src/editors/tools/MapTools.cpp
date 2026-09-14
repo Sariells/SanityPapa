@@ -4,9 +4,7 @@
 
 #include "MapTools.h"
 
-void MapTools::handleMapInput(std::optional<Map> &currentMap,
-                              const Tileset &tileset,
-                              const EditorState &editorState) {
+void MapTools::handleMapInput(std::optional<Map> &currentMap,const Tileset &tileset,const EditorState &editorState) {
 
     switch (editorState.currentTool) {
 
@@ -28,9 +26,7 @@ void MapTools::handleMapInput(std::optional<Map> &currentMap,
     }
 }
 
-void MapTools::brush(std::optional<Map> &currentMap,
-                     const Tileset &tileset,
-                     const EditorState &editorState){
+void MapTools::brush(std::optional<Map> &currentMap,const Tileset &tileset,const EditorState &editorState){
 
         if( !currentMap ||
             ImGui::GetIO().WantCaptureMouse ||
@@ -67,9 +63,7 @@ void MapTools::brush(std::optional<Map> &currentMap,
         }
     }
 
-void MapTools::eraser(std::optional<Map> &currentMap,
-                      const Tileset &tileset
-                      ){
+void MapTools::eraser(std::optional<Map> &currentMap,const Tileset &tileset){
     if( !currentMap ||
         ImGui::GetIO().WantCaptureMouse ||
         !ImGui::IsMouseDown(ImGuiMouseButton_Left)){
@@ -109,9 +103,7 @@ void MapTools::eraser(std::optional<Map> &currentMap,
     }
 }
 
-void MapTools::fill_color(std::optional<Map> &currentMap,
-                          const Tileset &tileset,
-                          const EditorState &editorState) {
+void MapTools::fill_color(std::optional<Map> &currentMap,const Tileset &tileset,const EditorState &editorState){
     if (!currentMap ||
         editorState.selectedTileID < 0 ||
         ImGui::GetIO().WantCaptureMouse)
@@ -152,20 +144,17 @@ void MapTools::fill_color(std::optional<Map> &currentMap,
         hasFillStart = false;
         // position теперь окончательный end
     }
-
 }
 
-void MapTools::fill_color_Preview(int minX,
-                                  int endX,
-                                  int minY,
-                                  int endY,
+void MapTools::fill_color_Preview(int minX, int endX,
+                                  int minY, int endY,
                                   const Tileset &tileset) {
 
-    int screenStartX = minX * tileset.getTileWidth();
-    int screenStartY = minY * tileset.getTileHeight();
+    auto screenStartX = static_cast<float>(minX * tileset.getTileWidth());
+    auto screenStartY = static_cast<float>(minY * tileset.getTileHeight());
 
-    int screenEndX = (endX + 1) * tileset.getTileWidth();
-    int screenEndY = (endY + 1) * tileset.getTileHeight();
+    auto screenEndX = static_cast<float>((endX + 1) * tileset.getTileWidth());
+    auto screenEndY = static_cast<float>((endY + 1) * tileset.getTileHeight());
 
     ImVec2 uv0(screenStartX,screenStartY);
     ImVec2 uv1(screenEndX, screenEndY);
@@ -187,7 +176,7 @@ mapXY MapTools::calculateMapXY(const Tileset& tileset) {
     return{mapX,mapY};
 }
 
-MinMax MapTools::calculateMinMax(mapXY &position) {
+MinMax MapTools::calculateMinMax(mapXY &position) const{
     const int X = position.x;
     const int Y = position.y;
 
@@ -202,10 +191,8 @@ MinMax MapTools::calculateMinMax(mapXY &position) {
 // Fills gaps between mouse positions so fast brush strokes remain continuous.
 // Uses Bresenham's line algorithm.
 void MapTools::paintLine(Map& map,
-                         int startX,
-                         int startY,
-                         int endX,
-                         int endY,
+                         int startX, int startY,
+                         int endX,   int endY,
                          int tileID){
 
     const int dx = std::abs(startX - endX);
