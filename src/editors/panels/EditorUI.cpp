@@ -38,7 +38,10 @@ void EditorUI::newFrame() {
 void EditorUI::drawEditors(EditorContext &context) {
    mapCreatorDialog.drawUI(context.currentMap);
    tileEditor.drawUI(context.tileset,context.editorState);
-   toolPanel.drawUI(context.editorState);
+
+   const size_t layerCount = context.currentMap ? context.currentMap->getLayers() : 0;
+
+   toolPanel.drawUI(context.editorState, layerCount);
 
    mapTools.handleMapInput(context.currentMap,context.tileset,context.editorState);
 }

@@ -12,6 +12,7 @@ enum class EditorTools{
 };
 struct EditorState{
     int selectedTileID = -1;
+    size_t activeLayer = 0;
     EditorTools currentTool = EditorTools::None;
 };
 

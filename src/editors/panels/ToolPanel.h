@@ -21,7 +21,7 @@ class ToolPanel {
 public:
     bool initialize(SDL_Renderer *renderer,const AssetManager& assets);
 
-    void drawUI(EditorState& editorState);
+    void drawUI(EditorState& editorState,size_t layerCount);
 private:
     std::unordered_map<std::string,SDL_Texture*> icons;
 

@@ -4,8 +4,6 @@
 
 #include "MapCreatorDialog.h"
 
-
-
 void MapCreatorDialog::drawUI(std::optional<Map> &currentMap) {
     ImGui::Begin("Map Editor");
 
@@ -17,16 +15,20 @@ void MapCreatorDialog::drawUI(std::optional<Map> &currentMap) {
             "Height",
             &newMapHeight
             );
-
-    if (newMapHeight > 0 && newMapWidth > 0){
+    ImGui::InputInt(
+            "Layers",
+            &newMapLayers
+    );
+    if (newMapHeight > 0 && newMapWidth > 0 && newMapLayers > 0){
         int tileCount = newMapWidth * newMapHeight;
         ImGui::Text(
-                "Map size: %d x %d",
+                "Map size: %d x %d, Layers: %d",
                 newMapWidth,
-                newMapHeight
+                newMapHeight,
+                newMapLayers
                 );
         ImGui::Text(
-                "Tiles: %d",
+                "Tiles per layer: %d",
                 tileCount
                 );
     } else {
@@ -37,9 +39,10 @@ void MapCreatorDialog::drawUI(std::optional<Map> &currentMap) {
 
     if(currentMap){
         ImGui::Text(
-                "Current Map: %d x %d",
+                "Current Map: %d x %d, Layers %zu",
                 currentMap->getWidth(),
-                currentMap->getHeight()
+                currentMap->getHeight(),
+                currentMap->getLayers()
                 );
     }
 
@@ -47,7 +50,8 @@ void MapCreatorDialog::drawUI(std::optional<Map> &currentMap) {
         if (newMapHeight > 0 && newMapWidth > 0){
             currentMap.emplace(
                     newMapWidth,
-                    newMapHeight
+                    newMapHeight,
+                    newMapLayers
                                );
         }
     }

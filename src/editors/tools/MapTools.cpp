@@ -16,7 +16,7 @@ void MapTools::handleMapInput(std::optional<Map> &currentMap,const Tileset &tile
             break;
 
         case EditorTools::Eraser:
-            eraser(currentMap,tileset);
+            eraser(currentMap,tileset,editorState);
             break;
         case EditorTools::Fill_Color:
             fill_color(currentMap,tileset,editorState);
@@ -29,6 +29,7 @@ void MapTools::handleMapInput(std::optional<Map> &currentMap,const Tileset &tile
 void MapTools::brush(std::optional<Map> &currentMap,const Tileset &tileset,const EditorState &editorState){
 
         if( !currentMap ||
+            editorState.selectedTileID < 0 ||
             ImGui::GetIO().WantCaptureMouse ||
             !ImGui::IsMouseDown(ImGuiMouseButton_Left)){
             hasLast = false;
@@ -36,11 +37,6 @@ void MapTools::brush(std::optional<Map> &currentMap,const Tileset &tileset,const
         }
 
         mapXY position = calculateMapXY(tileset);
-
-        if(!currentMap->isInside(position.x,position.y)){
-            hasLast = false;
-            return;
-        }
         if(!hasLast){
             lastPaintX = position.x;
             lastPaintY = position.y;
@@ -49,7 +45,8 @@ void MapTools::brush(std::optional<Map> &currentMap,const Tileset &tileset,const
                       lastPaintY,
                       position.x,
                       position.y,
-                      editorState.selectedTileID);
+                      editorState.selectedTileID,
+                      editorState.activeLayer);
             hasLast = true;
         } else {
             paintLine(*currentMap,
@@ -57,13 +54,14 @@ void MapTools::brush(std::optional<Map> &currentMap,const Tileset &tileset,const
                       lastPaintY,
                       position.x,
                       position.y,
-                      editorState.selectedTileID);
+                      editorState.selectedTileID,
+                      editorState.activeLayer);
             lastPaintX = position.x;
             lastPaintY = position.y;
         }
     }
 
-void MapTools::eraser(std::optional<Map> &currentMap,const Tileset &tileset){
+void MapTools::eraser(std::optional<Map> &currentMap, const Tileset &tileset, const EditorState &editorState) {
     if( !currentMap ||
         ImGui::GetIO().WantCaptureMouse ||
         !ImGui::IsMouseDown(ImGuiMouseButton_Left)){
@@ -84,7 +82,8 @@ void MapTools::eraser(std::optional<Map> &currentMap,const Tileset &tileset){
                       lastPaintY,
                       position.x,
                       position.y,
-                      -1);
+                      -1,
+                      editorState.activeLayer);
             hasLast = true;
         } else {
             paintLine(*currentMap,
@@ -92,7 +91,8 @@ void MapTools::eraser(std::optional<Map> &currentMap,const Tileset &tileset){
                       lastPaintY,
                       position.x,
                       position.y,
-                      -1);
+                      -1,
+                      editorState.activeLayer);
             lastPaintX = position.x;
             lastPaintY = position.y;
         }
@@ -138,7 +138,7 @@ void MapTools::fill_color(std::optional<Map> &currentMap,const Tileset &tileset,
 
         for(int y = m.minY;y <= m.maxY; ++y){
             for(int x = m.minX;x <= m.maxX; ++x){
-                currentMap->setTile(x,y,editorState.selectedTileID);
+                currentMap->setTile(x,y,editorState.activeLayer,editorState.selectedTileID);
             }
         }
         hasFillStart = false;
@@ -190,10 +190,10 @@ MinMax MapTools::calculateMinMax(mapXY &position) const{
 }
 // Fills gaps between mouse positions so fast brush strokes remain continuous.
 // Uses Bresenham's line algorithm.
-void MapTools::paintLine(Map& map,
+void MapTools::paintLine(Map &map,
                          int startX, int startY,
-                         int endX,   int endY,
-                         int tileID){
+                         int endX, int endY,
+                         int tileID,size_t layerIndex) {
 
     const int dx = std::abs(startX - endX);
     const int dy = std::abs(startY - endY);
@@ -215,7 +215,7 @@ void MapTools::paintLine(Map& map,
 
     int error = 0;
 
-    map.setTile(startX, startY, tileID);
+    map.setTile(startX, startY, layerIndex, tileID);
 
     if (dx >= dy) {
         while (startX != endX || startY != endY) {
@@ -225,7 +225,7 @@ void MapTools::paintLine(Map& map,
                 startY += stepY;
                 error -= dx;
             }
-            map.setTile(startX, startY, tileID);
+            map.setTile(startX, startY, layerIndex,tileID);
         }
     } else {
         while (startX != endX || startY != endY) {
@@ -235,7 +235,7 @@ void MapTools::paintLine(Map& map,
                 startX += stepX;
                 error -= dy;
             }
-            map.setTile(startX, startY, tileID);
+            map.setTile(startX, startY, layerIndex,tileID);
         }
     }
 }

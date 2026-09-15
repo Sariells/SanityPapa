@@ -57,9 +57,19 @@ bool ToolPanel::initialize(SDL_Renderer *renderer,
     return true;
 }
 
-void ToolPanel::drawUI(EditorState& editorState)
+void ToolPanel::drawUI(EditorState& editorState,size_t layerCount)
 {
     ImGui::Begin("Tools");
+    if(layerCount > 0){
+        int activeLayer = static_cast<int>(editorState.activeLayer);
+        if(ImGui::SliderInt(
+                "Layers",
+                &activeLayer,
+                0,
+                static_cast<int>(layerCount) - 1)){
+            editorState.activeLayer = static_cast<size_t>(activeLayer);
+        }
+    }
     ImGui::BeginGroup();
 
     if (icons["brush"])

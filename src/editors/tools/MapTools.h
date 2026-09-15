@@ -34,7 +34,6 @@ void handleMapInput(std::optional<Map> &currentMap,
                     const EditorState &editorState
                     );
 
-
 private:
 // Stores the previous mouse tile to keep a continuous stroke between frames.
     int lastPaintX = -1;
@@ -50,7 +49,8 @@ private:
                    int startY,
                    int endX,
                    int endY,
-                   int tileID);
+                   int tileID,
+                   size_t layerIndex);
 
     [[nodiscard]]
     static mapXY calculateMapXY(const Tileset& tileset);
@@ -62,7 +62,8 @@ private:
                const EditorState &editorState);
 
     void eraser(std::optional<Map> &currentMap,
-               const Tileset &tileset);
+               const Tileset &tileset,
+               const EditorState &editorState);
 
     void  fill_color(std::optional<Map> &currentMap,
                      const Tileset &tileset,

@@ -8,10 +8,9 @@
 #include "imgui.h"
 
 #include <optional>
-#include <math.h>
 
 #include "../../map/Map.h"
-#include "../EditorState.h"
+
 
 
 
@@ -25,7 +24,7 @@ private:
 
     int newMapWidth = 10;
     int newMapHeight = 10;
-
+    int newMapLayers = 1;
 
 
 
