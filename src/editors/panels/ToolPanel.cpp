@@ -24,7 +24,7 @@ bool ToolPanel::initialize(SDL_Renderer *renderer,
     //Example "brush.png" -> icons[brush]
     for(const auto& entry : std::filesystem::directory_iterator(IconDirectory)){
 
-        const auto path = entry.path();
+        const auto& path = entry.path();
 
         if(path.extension() != ".png"){
             continue;
@@ -81,6 +81,11 @@ void ToolPanel::drawUI(EditorState& editorState,size_t layerCount)
         {
             editorState.currentTool = EditorTools::Brush;
         }
+        if(editorState.currentTool == EditorTools::Brush){
+            ImVec2 buttonMin = ImGui::GetItemRectMin();
+            ImVec2 buttonMax = ImGui::GetItemRectMax();
+            ImGui::GetWindowDrawList()->AddRect(buttonMin, buttonMax, IM_COL32(255,255,255,255));
+        }
     }
 
     ImGui::EndGroup();
@@ -95,6 +100,12 @@ void ToolPanel::drawUI(EditorState& editorState,size_t layerCount)
                 ImVec2{48.0f, 48.0f}))
         {
             editorState.currentTool = EditorTools::Eraser;
+
+        }
+        if(editorState.currentTool == EditorTools::Eraser){
+            ImVec2 buttonMin = ImGui::GetItemRectMin();
+            ImVec2 buttonMax = ImGui::GetItemRectMax();
+            ImGui::GetWindowDrawList()->AddRect(buttonMin, buttonMax, IM_COL32(255,255,255,255));
         }
     }
 
@@ -111,8 +122,12 @@ void ToolPanel::drawUI(EditorState& editorState,size_t layerCount)
         {
             editorState.currentTool = EditorTools::Fill_Color;
         }
+        if(editorState.currentTool == EditorTools::Fill_Color){
+            ImVec2 buttonMin = ImGui::GetItemRectMin();
+            ImVec2 buttonMax = ImGui::GetItemRectMax();
+            ImGui::GetWindowDrawList()->AddRect(buttonMin, buttonMax, IM_COL32(255,255,255,255));
+        }
     }
-
     ImGui::EndGroup();
     ImGui::End();
 }

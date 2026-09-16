@@ -50,6 +50,7 @@ add_executable(Rpgmaker
         src/editors/panels/TileEditor.h
         src/editors/panels/ToolPanel.cpp
         src/editors/panels/ToolPanel.h
+        src/graphics/Camera2D.h
 )
 
 # =========================

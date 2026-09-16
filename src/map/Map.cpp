@@ -49,7 +49,7 @@ int Map::getTile(int x,int y,size_t layerIndex) const{
     return layers[layerIndex].tiles[index];
 }
 
-void Map::draw(SDL_Renderer *renderer, const Tileset &tileset) const {
+void Map::draw(SDL_Renderer *renderer, const Tileset &tileset, const Camera2D &camera) const {
     for(size_t layerIndex = 0; layerIndex < layers.size(); ++layerIndex){
         for(int y = 0; y < Height; ++y){
             for(int x = 0; x < Width; ++x){
@@ -57,14 +57,23 @@ void Map::draw(SDL_Renderer *renderer, const Tileset &tileset) const {
                 if(tileID < 0) {
                     continue;
                 }
-                float drawX = static_cast<float>(x) * static_cast<float>(tileset.getTileWidth());
-                float drawY = static_cast<float>(y) * static_cast<float>(tileset.getTileHeight());
+                float worldX = static_cast<float>(x) * static_cast<float>(tileset.getTileWidth());
+                float worldY = static_cast<float>(y) * static_cast<float>(tileset.getTileHeight());
+
+                float drawX = (worldX - camera.offsetX) * camera.zoom;
+                float drawY = (worldY - camera.offsetY) * camera.zoom;
+
+                SDL_FRect destination{
+                    drawX,
+                    drawY,
+                    static_cast<float>(tileset.getTileWidth()),
+                    static_cast<float>(tileset.getTileHeight())
+                };
 
                 tileset.drawTile(
                         renderer,
                         tileID,
-                        drawX,
-                        drawY
+                        destination
                 );
             }
         }

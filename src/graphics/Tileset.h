@@ -29,8 +29,7 @@ public:
     void drawTile(
             SDL_Renderer* renderer,
             int tileID,
-            float x,
-            float y
+            SDL_FRect &destination
     ) const;
 
     [[nodiscard]]

@@ -311,7 +311,7 @@ void Tileset::draw(SDL_Renderer* renderer, float x, float y) const {
     );
 }
 
-void Tileset::drawTile(SDL_Renderer *renderer, int tileID, float x, float y) const {
+void Tileset::drawTile(SDL_Renderer *renderer, int tileID, SDL_FRect &destination) const {
     if (!renderer || !texture)
         return;
 
@@ -328,13 +328,6 @@ void Tileset::drawTile(SDL_Renderer *renderer, int tileID, float x, float y) con
     SDL_FRect source{
             static_cast<float>(tileX * tileWidth),
             static_cast<float>(tileY * tileHeight),
-            static_cast<float>(tileWidth),
-            static_cast<float>(tileHeight)
-    };
-
-    SDL_FRect destination{
-            x,
-            y,
             static_cast<float>(tileWidth),
             static_cast<float>(tileHeight)
     };

@@ -33,7 +33,7 @@ void MapCreatorDialog::drawUI(std::optional<Map> &currentMap) {
                 );
     } else {
         ImGui::Text(
-                "InvalidMap size"
+                "Invalid Map size"
                 );
     }
 
@@ -47,7 +47,7 @@ void MapCreatorDialog::drawUI(std::optional<Map> &currentMap) {
     }
 
     if(ImGui::Button("Create new Map")){
-        if (newMapHeight > 0 && newMapWidth > 0){
+        if (newMapHeight > 0 && newMapWidth > 0 && newMapLayers > 0){
             currentMap.emplace(
                     newMapWidth,
                     newMapHeight,

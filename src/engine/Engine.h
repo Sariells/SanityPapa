@@ -40,6 +40,7 @@ private:
     AssetManager assets;
     Tileset tileset;
     std::optional<Map> currentMap;
+    Camera2D camera;
 
     EditorState editorState;
     EditorUI editorUi;

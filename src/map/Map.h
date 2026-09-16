@@ -11,6 +11,7 @@
 
 
 #include "../graphics/Tileset.h"
+#include "../graphics/Camera2D.h"
 
 struct MapLayers{
     std::vector<int> tiles;
@@ -22,18 +23,18 @@ public:
 
     void setTile(int x,int y,size_t layerIndex,int tileID);
 
-    void draw(SDL_Renderer* renderer, const Tileset& tileset) const;
+    void draw(SDL_Renderer* renderer, const Tileset& tileset,const Camera2D &camera) const;
 
     [[nodiscard]]
     int getTile(int x,int y,size_t layerIndex) const;
-
+    [[nodiscard]]
     bool isInside(int x, int y) const;
     [[nodiscard]]
     int getWidth()const;
     [[nodiscard]]
     int getHeight()const;
     [[nodiscard]]
-    size_t  getLayers()const;
+    size_t getLayers()const;
 private:
     //Это наш размер карты будет
     int Width = 0;

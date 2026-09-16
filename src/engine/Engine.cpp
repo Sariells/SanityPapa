@@ -136,7 +136,7 @@ void Engine::run()
 
         // Тестовый тайл.
         if(currentMap){
-            currentMap->draw(renderer, tileset);
+            currentMap->draw(renderer, tileset, camera);
         }
 
         //IMGUI RENDER
