@@ -50,5 +50,6 @@ private:
         currentMap,
         tileset,
         editorState,
+        camera
     };
 };

@@ -12,12 +12,13 @@
 
 #include "../../map/Map.h"
 #include "../EditorState.h"
-
+#include "../EditorContext.h"
 
 struct mapXY{
     int x;
     int y;
 };
+
 struct MinMax{
     int minX;
     int minY;
@@ -29,10 +30,7 @@ struct MinMax{
 class MapTools {
 public:
 
-void handleMapInput(std::optional<Map> &currentMap,
-                    const Tileset &tileset,
-                    const EditorState &editorState
-                    );
+void handleMapInput(EditorContext &context);
 
 private:
 // Stores the previous mouse tile to keep a continuous stroke between frames.
@@ -53,27 +51,22 @@ private:
                    size_t layerIndex);
 
     [[nodiscard]]
-    static mapXY calculateMapXY(const Tileset& tileset);
+    static mapXY calculateMapXY(const Tileset &tileset, const Camera2D &camera);
 
     MinMax calculateMinMax(mapXY& mapXY) const;
 
-    void brush(std::optional<Map> &currentMap,
-               const Tileset &tileset,
-               const EditorState &editorState);
+    void brush(EditorContext &context);
 
-    void eraser(std::optional<Map> &currentMap,
-               const Tileset &tileset,
-               const EditorState &editorState);
+    void eraser(EditorContext &context);
 
-    void  fill_color(std::optional<Map> &currentMap,
-                     const Tileset &tileset,
-                     const EditorState &editorState);
+    void  fill_color(EditorContext &context);
 
-    static void fill_color_Preview(int minX,
+    static void fill_color_Preview(
+                            int minX,
                             int endX,
                             int minY,
                             int endY,
-                            const Tileset &tileset);
+                            const EditorContext &context);
 
 };
 

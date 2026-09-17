@@ -43,7 +43,7 @@ void EditorUI::drawEditors(EditorContext &context) {
 
    toolPanel.drawUI(context.editorState, layerCount);
 
-   mapTools.handleMapInput(context.currentMap,context.tileset,context.editorState);
+   mapTools.handleMapInput(context);
 }
 
 void EditorUI::render(SDL_Renderer *renderer) {

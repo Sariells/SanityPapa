@@ -5,17 +5,17 @@
 #ifndef RPGMAKER_EDITORCONTEXT_H
 #define RPGMAKER_EDITORCONTEXT_H
 
-#endif //RPGMAKER_EDITORCONTEXT_H
+#include "../map/Map.h"
+#include "../graphics/Tileset.h"
+#include "../graphics/Camera2D.h"
+#include "EditorState.h"
 
 #include <optional>
 
-#include "../map/Map.h"
-#include "../graphics/Tileset.h"
-#include "EditorState.h"
-
-
 struct EditorContext{
-    std::optional<Map>& currentMap;
-    Tileset& tileset;
-    EditorState& editorState;
+    std::optional<Map> &currentMap;
+    Tileset &tileset;
+    EditorState &editorState;
+    Camera2D &camera;
 };
+#endif //RPGMAKER_EDITORCONTEXT_H

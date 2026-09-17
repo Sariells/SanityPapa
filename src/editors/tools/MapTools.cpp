@@ -4,117 +4,112 @@
 
 #include "MapTools.h"
 
-void MapTools::handleMapInput(std::optional<Map> &currentMap,const Tileset &tileset,const EditorState &editorState) {
+void MapTools::handleMapInput(EditorContext &context) {
 
-    switch (editorState.currentTool) {
+    switch (context.editorState.currentTool) {
 
         case EditorTools::None:
             break;
 
         case EditorTools::Brush:
-            brush(currentMap,tileset,editorState);
+            brush(context);
             break;
 
         case EditorTools::Eraser:
-            eraser(currentMap,tileset,editorState);
+            eraser(context);
             break;
         case EditorTools::Fill_Color:
-            fill_color(currentMap,tileset,editorState);
+            fill_color(context);
             break;
         default:
             break;
     }
 }
 
-void MapTools::brush(std::optional<Map> &currentMap,const Tileset &tileset,const EditorState &editorState){
+void MapTools::brush(EditorContext &context) {
 
-        if( !currentMap ||
-            editorState.selectedTileID < 0 ||
+    if( !context.currentMap ||
+            context.editorState.selectedTileID < 0 ||
             ImGui::GetIO().WantCaptureMouse ||
             !ImGui::IsMouseDown(ImGuiMouseButton_Left)){
             hasLast = false;
             return;
         }
 
-        mapXY position = calculateMapXY(tileset);
+        mapXY position = calculateMapXY(context.tileset,context.camera);
         if(!hasLast){
             lastPaintX = position.x;
             lastPaintY = position.y;
-            paintLine(*currentMap,
+            paintLine(*context.currentMap,
                       lastPaintX,
                       lastPaintY,
                       position.x,
                       position.y,
-                      editorState.selectedTileID,
-                      editorState.activeLayer);
+                      context.editorState.selectedTileID,
+                      context.editorState.activeLayer);
             hasLast = true;
         } else {
-            paintLine(*currentMap,
+            paintLine(*context.currentMap,
                       lastPaintX,
                       lastPaintY,
                       position.x,
                       position.y,
-                      editorState.selectedTileID,
-                      editorState.activeLayer);
+                      context.editorState.selectedTileID,
+                      context.editorState.activeLayer);
             lastPaintX = position.x;
             lastPaintY = position.y;
         }
     }
 
-void MapTools::eraser(std::optional<Map> &currentMap, const Tileset &tileset, const EditorState &editorState) {
-    if( !currentMap ||
+void MapTools::eraser(EditorContext &context) {
+    if( !context.currentMap ||
         ImGui::GetIO().WantCaptureMouse ||
         !ImGui::IsMouseDown(ImGuiMouseButton_Left)){
         hasLast = false;
         return;
     }
-        mapXY position = calculateMapXY(tileset);
+        mapXY position = calculateMapXY(context.tileset,context.camera);
 
-        if(!currentMap->isInside(position.x,position.y)){
+        if(!context.currentMap->isInside(position.x,position.y)){
             hasLast = false;
             return;
         }
         if(!hasLast){
             lastPaintX = position.x;
             lastPaintY = position.y;
-            paintLine(*currentMap,
+            paintLine(*context.currentMap,
                       lastPaintX,
                       lastPaintY,
                       position.x,
                       position.y,
                       -1,
-                      editorState.activeLayer);
+                      context.editorState.activeLayer);
             hasLast = true;
         } else {
-            paintLine(*currentMap,
+            paintLine(*context.currentMap,
                       lastPaintX,
                       lastPaintY,
                       position.x,
                       position.y,
                       -1,
-                      editorState.activeLayer);
+                      context.editorState.activeLayer);
             lastPaintX = position.x;
             lastPaintY = position.y;
         }
-
-    if(!ImGui::IsMouseDown(ImGuiMouseButton_Left)){
-        hasLast = false;
-        return;
-    }
 }
 
-void MapTools::fill_color(std::optional<Map> &currentMap,const Tileset &tileset,const EditorState &editorState){
-    if (!currentMap ||
-        editorState.selectedTileID < 0 ||
+void MapTools::fill_color(EditorContext &context) {
+    if (!context.currentMap ||
+        context.editorState.selectedTileID < 0 ||
         ImGui::GetIO().WantCaptureMouse)
     {
         return;
     }
     if (ImGui::IsMouseClicked(ImGuiMouseButton_Left))
     {
-        mapXY position = calculateMapXY(tileset);
+        mapXY position = calculateMapXY(context.tileset,context.camera);
 
-        if (currentMap->isInside(position.x, position.y))
+        if (context.currentMap->isInside(position.x, position.y))
         {
             startX = position.x;
             startY = position.y;
@@ -124,21 +119,22 @@ void MapTools::fill_color(std::optional<Map> &currentMap,const Tileset &tileset,
     if (hasFillStart &&
         ImGui::IsMouseDown(ImGuiMouseButton_Left))
     {
-        mapXY position = calculateMapXY(tileset);
+        mapXY position = calculateMapXY(context.tileset,context.camera);
         MinMax m = calculateMinMax(position);
 
-        fill_color_Preview(m.minX,m.maxX,m.minY,m.maxY,tileset);
+        fill_color_Preview(m.minX,m.maxX,m.minY,m.maxY,context);
         // текущая position — это временный конец прямоугольника
     }
     if (hasFillStart &&
         ImGui::IsMouseReleased(ImGuiMouseButton_Left))
     {
-        mapXY position = calculateMapXY(tileset);
+        mapXY position = calculateMapXY(context.tileset,context.camera);
         MinMax m = calculateMinMax(position);
 
         for(int y = m.minY;y <= m.maxY; ++y){
             for(int x = m.minX;x <= m.maxX; ++x){
-                currentMap->setTile(x,y,editorState.activeLayer,editorState.selectedTileID);
+                context.currentMap->setTile(x,y,context.editorState.activeLayer,
+                                            context.editorState.selectedTileID);
             }
         }
         hasFillStart = false;
@@ -148,16 +144,22 @@ void MapTools::fill_color(std::optional<Map> &currentMap,const Tileset &tileset,
 
 void MapTools::fill_color_Preview(int minX, int endX,
                                   int minY, int endY,
-                                  const Tileset &tileset) {
+                                  const EditorContext &context) {
 
-    auto screenStartX = static_cast<float>(minX * tileset.getTileWidth());
-    auto screenStartY = static_cast<float>(minY * tileset.getTileHeight());
+    auto worldStartX = static_cast<float>(minX * context.tileset.getTileWidth());
+    auto worldStartY = static_cast<float>(minY * context.tileset.getTileHeight());
 
-    auto screenEndX = static_cast<float>((endX + 1) * tileset.getTileWidth());
-    auto screenEndY = static_cast<float>((endY + 1) * tileset.getTileHeight());
+    auto worldEndX = static_cast<float>((endX + 1) * context.tileset.getTileWidth());
+    auto worldEndY = static_cast<float>((endY + 1) * context.tileset.getTileHeight());
+
+    auto screenStartX = (worldStartX - context.camera.offsetX) * context.camera.zoom;
+    auto screenStartY = (worldStartY - context.camera.offsetY) * context.camera.zoom;
+
+    auto screenEndX = (worldEndX - context.camera.offsetX) * context.camera.zoom;
+    auto screenEndY = (worldEndY - context.camera.offsetY) * context.camera.zoom;
 
     ImVec2 uv0(screenStartX,screenStartY);
-    ImVec2 uv1(screenEndX, screenEndY);
+    ImVec2 uv1(screenEndX,screenEndY);
 
     ImGui::GetForegroundDrawList()->AddRect(
             uv0,
@@ -166,12 +168,15 @@ void MapTools::fill_color_Preview(int minX, int endX,
             );
 }
 
-mapXY MapTools::calculateMapXY(const Tileset& tileset) {
-    //supposed what the map start at screen position (0,0) Later need add zoom and camera
+mapXY MapTools::calculateMapXY(const Tileset& tileset, const Camera2D& camera) {
+    //Screen Cords
     ImVec2 MousePosition = ImGui::GetMousePos();
-
-    int mapX = static_cast<int>(MousePosition.x) / tileset.getTileWidth();
-    int mapY = static_cast<int>(MousePosition.y) / tileset.getTileHeight();
+    //world cords
+    float worldX = MousePosition.x / camera.zoom + camera.offsetX;
+    float worldY = MousePosition.y / camera.zoom + camera.offsetY;
+    //TILE
+    int mapX = static_cast<int>(worldX) / tileset.getTileWidth();
+    int mapY = static_cast<int>(worldY) / tileset.getTileHeight();
 
     return{mapX,mapY};
 }
