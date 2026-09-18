@@ -15,7 +15,6 @@ int main()
         fmt::print(
                 "Engine initialization failed!\n"
         );
-
         return 1;
     }
 

@@ -41,7 +41,8 @@ private:
     int Height = 0;
     //это массив он будет заполнен  кол-во элементов по формуле widht * height = elements
     std::vector<MapLayers> layers;
-    //а потом мы сделаем что-то вроде
+
+
 };
 
 

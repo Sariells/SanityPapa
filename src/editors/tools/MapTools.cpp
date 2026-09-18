@@ -122,7 +122,9 @@ void MapTools::fill_color(EditorContext &context) {
         mapXY position = calculateMapXY(context.tileset,context.camera);
         MinMax m = calculateMinMax(position);
 
-        fill_color_Preview(m.minX,m.maxX,m.minY,m.maxY,context);
+        fill_color_Preview(m.minX,m.maxX,
+                           m.minY,m.maxY,
+                           context.tileset,context.camera);
         // текущая position — это временный конец прямоугольника
     }
     if (hasFillStart &&
@@ -144,26 +146,24 @@ void MapTools::fill_color(EditorContext &context) {
 
 void MapTools::fill_color_Preview(int minX, int endX,
                                   int minY, int endY,
-                                  const EditorContext &context) {
+                                  const Tileset &tileset,
+                                  const Camera2D &camera) {
 
-    auto worldStartX = static_cast<float>(minX * context.tileset.getTileWidth());
-    auto worldStartY = static_cast<float>(minY * context.tileset.getTileHeight());
+    auto worldStartX = static_cast<float>(minX * tileset.getTileWidth());
+    auto worldStartY = static_cast<float>(minY * tileset.getTileHeight());
 
-    auto worldEndX = static_cast<float>((endX + 1) * context.tileset.getTileWidth());
-    auto worldEndY = static_cast<float>((endY + 1) * context.tileset.getTileHeight());
+    auto worldEndX = static_cast<float>((endX + 1) * tileset.getTileWidth());
+    auto worldEndY = static_cast<float>((endY + 1) * tileset.getTileHeight());
 
-    auto screenStartX = (worldStartX - context.camera.offsetX) * context.camera.zoom;
-    auto screenStartY = (worldStartY - context.camera.offsetY) * context.camera.zoom;
+    auto screenStart =  camera.worldToScreen({worldStartX,worldStartY});
+    auto screenEnd =    camera.worldToScreen({worldEndX,worldEndY});
 
-    auto screenEndX = (worldEndX - context.camera.offsetX) * context.camera.zoom;
-    auto screenEndY = (worldEndY - context.camera.offsetY) * context.camera.zoom;
-
-    ImVec2 uv0(screenStartX,screenStartY);
-    ImVec2 uv1(screenEndX,screenEndY);
+    ImVec2 p_min(screenStart.x,screenStart.y);
+    ImVec2 p_max(screenEnd.x,screenEnd.y);
 
     ImGui::GetForegroundDrawList()->AddRect(
-            uv0,
-            uv1,
+            p_min,
+            p_max,
             IM_COL32(255,255,255,255)
             );
 }
@@ -172,11 +172,10 @@ mapXY MapTools::calculateMapXY(const Tileset& tileset, const Camera2D& camera) {
     //Screen Cords
     ImVec2 MousePosition = ImGui::GetMousePos();
     //world cords
-    float worldX = MousePosition.x / camera.zoom + camera.offsetX;
-    float worldY = MousePosition.y / camera.zoom + camera.offsetY;
+    Position2D world = camera.screenToWorld({MousePosition.x,MousePosition.y});
     //TILE
-    int mapX = static_cast<int>(worldX) / tileset.getTileWidth();
-    int mapY = static_cast<int>(worldY) / tileset.getTileHeight();
+    int mapX = static_cast<int>(world.x) / tileset.getTileWidth();
+    int mapY = static_cast<int>(world.y) / tileset.getTileHeight();
 
     return{mapX,mapY};
 }

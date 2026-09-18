@@ -28,6 +28,7 @@ public:
     void drawEditors(EditorContext& context);
     static void render(SDL_Renderer* renderer);
     static void shutdown();
+    static void handleKeyboardInput(Camera2D &camera);
 private:
     MapCreatorDialog mapCreatorDialog;
     TileEditor tileEditor;

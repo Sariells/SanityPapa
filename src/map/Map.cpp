@@ -60,12 +60,11 @@ void Map::draw(SDL_Renderer *renderer, const Tileset &tileset, const Camera2D &c
                 float worldX = static_cast<float>(x) * static_cast<float>(tileset.getTileWidth());
                 float worldY = static_cast<float>(y) * static_cast<float>(tileset.getTileHeight());
                 //screen cords
-                float drawX = (worldX - camera.offsetX) * camera.zoom;
-                float drawY = (worldY - camera.offsetY) * camera.zoom;
+                Position2D draw = camera.worldToScreen({worldX,worldY});
 
                 SDL_FRect destination{
-                    drawX,
-                    drawY,
+                    draw.x,
+                    draw.y,
                     static_cast<float>(tileset.getTileWidth()) * camera.zoom,
                     static_cast<float>(tileset.getTileHeight()) * camera.zoom,
                 };

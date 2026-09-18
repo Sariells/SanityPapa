@@ -66,7 +66,8 @@ private:
                             int endX,
                             int minY,
                             int endY,
-                            const EditorContext &context);
+                            const Tileset &tileset,
+                            const Camera2D &camera);
 
 };
 
