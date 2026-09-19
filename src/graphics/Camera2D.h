@@ -27,4 +27,10 @@ struct Camera2D{
         return{screenX,screenY};
     };
 };
+struct ViewPort{
+    //map world cords = viewport
+    //map size * tilesize px - (viewport / zoom)
+    float width = 100.0f;
+    float height = 100.0f;
+};
 #endif //RPGMAKER_CAMERA2D_H

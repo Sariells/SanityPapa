@@ -25,10 +25,10 @@ public:
                            const AssetManager& assetManager);
     static void processEvent(SDL_Event& event);
     static void newFrame();
-    void drawEditors(EditorContext& context);
+    void drawEditors(EditorContext& context,ViewPort &view);
     static void render(SDL_Renderer* renderer);
     static void shutdown();
-    static void handleKeyboardInput(Camera2D &camera);
+    static void handleKeyboardInput(Camera2D &camera,Map &currentMap,const Tileset &tileset, ViewPort &view);
 private:
     MapCreatorDialog mapCreatorDialog;
     TileEditor tileEditor;

@@ -68,7 +68,13 @@ bool Engine::initialize()
 
         return false;
     }
+    int width = 0;
+    int height = 0;
 
+    if(SDL_GetCurrentRenderOutputSize(renderer,&width,&height)){
+        view.width = width;
+        view.height = height;
+    }
     // Load tileset
 
     const auto tilesetPath = assets.data("tilesets/punyworld-overworld-tiles.tsx");
@@ -121,7 +127,7 @@ void Engine::run()
         editorUi.newFrame();
 
         //GUI
-        editorUi.drawEditors(context);
+        editorUi.drawEditors(context,view);
         // Game Render
 
         SDL_SetRenderDrawColor(

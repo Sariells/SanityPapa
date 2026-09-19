@@ -13,7 +13,7 @@ Map::Map(int x, int y,size_t layerCount)
 {
     layers.resize(layerCount);
     for(auto &layer : layers){
-        layer.tiles.resize(Width * Height,-1);
+        layer.tiles.resize(Width * Height,0);
     }
 }
 

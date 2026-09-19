@@ -41,6 +41,7 @@ private:
     Tileset tileset;
     std::optional<Map> currentMap;
     Camera2D camera;
+    ViewPort view;
 
     EditorState editorState;
     EditorUI editorUi;

@@ -35,7 +35,7 @@ void EditorUI::newFrame() {
     ImGui::NewFrame();
 }
 
-void EditorUI::drawEditors(EditorContext &context) {
+void EditorUI::drawEditors(EditorContext &context,ViewPort &view) {
    mapCreatorDialog.drawUI(context.currentMap);
    TileEditor::drawUI(context.tileset,context.editorState);
 
@@ -44,7 +44,9 @@ void EditorUI::drawEditors(EditorContext &context) {
    toolPanel.drawUI(context.editorState, layerCount);
 
    mapTools.handleMapInput(context);
-   handleKeyboardInput(context.camera);
+   if(context.currentMap){
+       handleKeyboardInput(context.camera,*context.currentMap,context.tileset,view);
+   }
 }
 
 void EditorUI::render(SDL_Renderer *renderer) {
@@ -61,19 +63,51 @@ void EditorUI::shutdown() {
     ImGui::DestroyContext();
 }
 //Cделать передвижение на стрелочки и колесико мышки и добавить зум
-void EditorUI::handleKeyboardInput(Camera2D &camera) {
+void EditorUI::handleKeyboardInput(Camera2D &camera, Map &currentMap,const Tileset &tileset, ViewPort &view) {
     float time = ImGui::GetIO().DeltaTime; //это для плавности штука кадры в секунду берет
     float cameraSpeed = 200.0f;
-    if(ImGui::IsKeyDown(ImGuiKey_W) && !ImGui::GetIO().WantCaptureKeyboard){
+
+    if (ImGui::GetIO().WantCaptureKeyboard){
+        return;
+    }
+    //map size * tilesize px - (viewport / zoom)
+    float mapWorldWidth = static_cast<int>(currentMap.getWidth()) * tileset.getTileWidth();
+    float mapWorldHeight = static_cast<int>(currentMap.getHeight()) * tileset.getTileHeight();
+
+    float viewportWorldWidth = (view.width / camera.zoom);
+    float viewportWorldHeight =  (view.height / camera.zoom);
+
+    float paddingX = mapWorldWidth * 0.1f;
+    float paddingY = mapWorldHeight * 0.1f;
+
+    float MaxOffsetX = mapWorldWidth + paddingX - viewportWorldWidth;
+    float MaxOffsetY =  mapWorldHeight + paddingY - viewportWorldHeight;
+
+    float MinOffsetX = -paddingX;
+    float MinOffsetY = -paddingY;
+
+    float workspaceWidth = mapWorldWidth + paddingX * 2.0f;
+    float workspaceHeight = mapWorldHeight + paddingY * 2.0f;
+
+    bool canMoveX = workspaceWidth > viewportWorldWidth;
+    bool canMoveY = workspaceHeight > viewportWorldHeight;
+
+    if(!canMoveX){
+        camera.offsetX = (mapWorldWidth - viewportWorldWidth) / 2;
+    }
+    if(!canMoveY){
+        camera.offsetY = (mapWorldHeight - viewportWorldHeight) /2;
+    }
+    if(ImGui::IsKeyDown(ImGuiKey_W) && canMoveY && camera.offsetY > MinOffsetY){
         camera.offsetY -= cameraSpeed * time;
     }
-    if(ImGui::IsKeyDown(ImGuiKey_S) && !ImGui::GetIO().WantCaptureKeyboard){
+    if(ImGui::IsKeyDown(ImGuiKey_S) && canMoveY && camera.offsetY < MaxOffsetY){
         camera.offsetY += cameraSpeed * time; //это какая-то умная формула чтобы камера плавно двигалась
     }
-    if(ImGui::IsKeyDown(ImGuiKey_D) && !ImGui::GetIO().WantCaptureKeyboard){
+    if(ImGui::IsKeyDown(ImGuiKey_D) && canMoveX && camera.offsetX < MaxOffsetX){
         camera.offsetX += cameraSpeed * time;
     }
-    if(ImGui::IsKeyDown(ImGuiKey_A) && !ImGui::GetIO().WantCaptureKeyboard){
+    if(ImGui::IsKeyDown(ImGuiKey_A) && canMoveX && camera.offsetX > MinOffsetX){
         camera.offsetX -= cameraSpeed * time;
     }
 }
