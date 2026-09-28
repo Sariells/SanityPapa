@@ -4,7 +4,7 @@
 
 #include "MapCreatorDialog.h"
 
-void MapCreatorDialog::drawUI(std::optional<Map> &currentMap) {
+void MapCreatorDialog::drawUI(std::optional<Map> &currentMap,  EditorState& editorState) {
     ImGui::Begin("Map Editor");
 
     ImGui::InputInt(
@@ -53,8 +53,29 @@ void MapCreatorDialog::drawUI(std::optional<Map> &currentMap) {
                     newMapHeight,
                     newMapLayers
                                );
+            editorState.activeLayer = 0;
+        }
+    }
+    const std::filesystem::path mapPath = "C:\\Users\\user\\CLionProjects\\Rpgmaker\\data\\Saves\\save.json";
+    if (ImGui::Button("Load Map")){
+        auto loadedMap = mapIO::load(mapPath);
+        if (loadedMap){
+            currentMap = std::move(loadedMap);
+            editorState.activeLayer = 0;
+        }
+        else{
+            fmt::print("Failed to load map\n");
+        }
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Save Map")){
+        if (currentMap){
+            if (!mapIO::save(*currentMap,mapPath)){
+                fmt::print("Failed to save map\n");
+            }
         }
     }
 
+    ImGui::SameLine();
     ImGui::End();
 }

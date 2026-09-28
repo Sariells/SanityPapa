@@ -14,15 +14,12 @@
 #include "MapCreatorDialog.h"
 #include "TileEditor.h"
 #include "ToolPanel.h"
-
-#include "../EditorContext.h"
-#include "../tools/MapTools.h"
+#include "EditorContext.h"
+#include "MapTools.h"
 
 class EditorUI {
 public:
-    bool initialize(SDL_Window* window,
-                           SDL_Renderer* renderer,
-                           const AssetManager& assetManager);
+    bool initialize(SDL_Window* window,SDL_Renderer* renderer,const AssetManager& assetManager);
     static void processEvent(SDL_Event& event);
     static void newFrame();
     void drawEditors(EditorContext& context,ViewPort &view);

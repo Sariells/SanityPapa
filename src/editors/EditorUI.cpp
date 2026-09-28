@@ -36,7 +36,7 @@ void EditorUI::newFrame() {
 }
 
 void EditorUI::drawEditors(EditorContext &context,ViewPort &view) {
-   mapCreatorDialog.drawUI(context.currentMap);
+   mapCreatorDialog.drawUI(context.currentMap, context.editorState);
    TileEditor::drawUI(context.tileset,context.editorState);
 
    const size_t layerCount = context.currentMap ? context.currentMap->getLayers() : 0;
@@ -62,52 +62,33 @@ void EditorUI::shutdown() {
     ImGui_ImplSDL3_Shutdown();
     ImGui::DestroyContext();
 }
-//Cделать передвижение на стрелочки и колесико мышки и добавить зум
+
 void EditorUI::handleKeyboardInput(Camera2D &camera, Map &currentMap,const Tileset &tileset, ViewPort &view) {
-    float time = ImGui::GetIO().DeltaTime; //это для плавности штука кадры в секунду берет
+    float time = ImGui::GetIO().DeltaTime;
     float cameraSpeed = 200.0f;
 
     if (ImGui::GetIO().WantCaptureKeyboard){
         return;
     }
-    //map size * tilesize px - (viewport / zoom)
-    float mapWorldWidth = static_cast<int>(currentMap.getWidth()) * tileset.getTileWidth();
-    float mapWorldHeight = static_cast<int>(currentMap.getHeight()) * tileset.getTileHeight();
+    auto mapWorldWidth = static_cast<float>(currentMap.getWidth() * tileset.getTileWidth());
+    auto mapWorldHeight = static_cast<float>(currentMap.getHeight() * tileset.getTileHeight());
+    // float workspaceWidth = mapWorldWidth  * 2.0f;
+    // float workspaceHeight = mapWorldHeight  * 2.0f;
+    Center center{mapWorldWidth,mapWorldHeight};
 
-    float viewportWorldWidth = (view.width / camera.zoom);
-    float viewportWorldHeight =  (view.height / camera.zoom);
-
-    float paddingX = mapWorldWidth * 0.1f;
-    float paddingY = mapWorldHeight * 0.1f;
-
-    float MaxOffsetX = mapWorldWidth + paddingX - viewportWorldWidth;
-    float MaxOffsetY =  mapWorldHeight + paddingY - viewportWorldHeight;
-
-    float MinOffsetX = -paddingX;
-    float MinOffsetY = -paddingY;
-
-    float workspaceWidth = mapWorldWidth + paddingX * 2.0f;
-    float workspaceHeight = mapWorldHeight + paddingY * 2.0f;
-
-    bool canMoveX = workspaceWidth > viewportWorldWidth;
-    bool canMoveY = workspaceHeight > viewportWorldHeight;
-
-    if(!canMoveX){
-        camera.offsetX = (mapWorldWidth - viewportWorldWidth) / 2;
-    }
-    if(!canMoveY){
-        camera.offsetY = (mapWorldHeight - viewportWorldHeight) /2;
-    }
-    if(ImGui::IsKeyDown(ImGuiKey_W) && canMoveY && camera.offsetY > MinOffsetY){
+    if(ImGui::IsKeyDown(ImGuiKey_W)){
         camera.offsetY -= cameraSpeed * time;
     }
-    if(ImGui::IsKeyDown(ImGuiKey_S) && canMoveY && camera.offsetY < MaxOffsetY){
-        camera.offsetY += cameraSpeed * time; //это какая-то умная формула чтобы камера плавно двигалась
+    if(ImGui::IsKeyDown(ImGuiKey_S)){
+        camera.offsetY += cameraSpeed * time;
     }
-    if(ImGui::IsKeyDown(ImGuiKey_D) && canMoveX && camera.offsetX < MaxOffsetX){
+    if(ImGui::IsKeyDown(ImGuiKey_D)){
         camera.offsetX += cameraSpeed * time;
     }
-    if(ImGui::IsKeyDown(ImGuiKey_A) && canMoveX && camera.offsetX > MinOffsetX){
+    if(ImGui::IsKeyDown(ImGuiKey_A)){
         camera.offsetX -= cameraSpeed * time;
+    }
+    if(ImGui::IsKeyPressed(ImGuiKey_1)){
+        camera.jumpToCenter(center,camera,view);
     }
 }

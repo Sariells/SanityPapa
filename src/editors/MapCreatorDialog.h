@@ -9,14 +9,13 @@
 
 #include <optional>
 
-#include "../../map/Map.h"
-
-
-
+#include "../map/Map.h"
+#include "../map/mapIO.h"
+#include "EditorState.h"
 
 class MapCreatorDialog {
 public:
-    void drawUI(std::optional<Map>& currentMap);
+    void drawUI(std::optional<Map>& currentMap, EditorState& editorState);
 
 
 

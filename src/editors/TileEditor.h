@@ -9,8 +9,8 @@
 #include "SDL3/SDL.h"
 
 
-#include "../../graphics/Tileset.h"
-#include "../EditorState.h"
+#include "../graphics/Tileset.h"
+#include "EditorState.h"
 
 struct MouseXY
 {

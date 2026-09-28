@@ -10,9 +10,9 @@
 #include <optional>
 #include <algorithm>
 
-#include "../../map/Map.h"
-#include "../EditorState.h"
-#include "../EditorContext.h"
+#include "../map/Map.h"
+#include "EditorState.h"
+#include "EditorContext.h"
 
 struct mapXY{
     int x;

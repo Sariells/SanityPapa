@@ -4,7 +4,6 @@
 
 #include "Map.h"
 
-
 #include <fmt/core.h>
 
 Map::Map(int x, int y,size_t layerCount)
@@ -12,8 +11,12 @@ Map::Map(int x, int y,size_t layerCount)
             Height(y)
 {
     layers.resize(layerCount);
-    for(auto &layer : layers){
-        layer.tiles.resize(Width * Height,0);
+    for(size_t layerIndex = 0; layerIndex < layers.size(); ++layerIndex){
+        if(layerIndex == 0){
+            layers[layerIndex].tiles.resize(Width * Height, 0);
+        } else {
+            layers[layerIndex].tiles.resize(Width * Height, -1);
+        }
     }
 }
 
@@ -30,7 +33,7 @@ void Map::setTile(int x,int y,size_t layerIndex,int tileID){
     if(!isInside(x,y)){
         return;
     }
-    if(layerIndex > layers.size()){
+    if(layerIndex >= layers.size()){
         return;
     }
     int index = y * Width + x;
@@ -42,7 +45,7 @@ int Map::getTile(int x,int y,size_t layerIndex) const{
         fmt::print("Tile coordinates are out of border\n");
         return -1;
     }
-    if(layerIndex > layers.size()){
+    if(layerIndex >= layers.size()){
         return -1;
     }
     int index = y * Width + x;

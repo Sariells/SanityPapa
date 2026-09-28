@@ -8,14 +8,14 @@
 #include "imgui.h"
 #include "SDL3/SDL.h"
 #include "fmt/core.h"
-#include <SDL3_image/SDL_image.h>
+#include "SDL3_image/SDL_image.h"
 
 #include <filesystem>
 #include <string>
 #include <unordered_map>
 
-#include "../EditorState.h"
-#include "../../assets/AssetManager.h"
+#include "EditorState.h"
+#include "../assets/AssetManager.h"
 
 class ToolPanel {
 public:
