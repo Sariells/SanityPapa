@@ -5,74 +5,68 @@
 #include "mapIO.h"
 
 bool mapIO::save(const Map &currentMap,const std::filesystem::path &path){
-    auto result = json::object();
-    result["width"] = currentMap.getWidth();
-    result["height"] = currentMap.getHeight();
-    result["layers"] = json::array();
-
-    for(size_t layerIndex = 0; layerIndex < currentMap.getLayers();++layerIndex){
-
-        json layer = json::object();
-        layer["tiles"] = json::array();
-
-        for(int y = 0; y < currentMap.getHeight(); ++y){
-            json row = json::array();
-            for(int x = 0; x < currentMap.getWidth(); ++x){
-
-                row.push_back(currentMap.getTile(x,y,layerIndex));
-            }
-            layer["tiles"].push_back(row);
-        }
-        result["layers"].push_back(layer);
+    if(!path.parent_path().empty()){
+        std::filesystem::create_directories(path.parent_path());
     }
-
-    std::filesystem::create_directories(
-            path.parent_path()
-    );
-
     std::ofstream file(path);
-
     if(!file.is_open()){
         return false;
     }
-    file << result.dump(4);
+
+    file << "{\n";
+    file << "\"Width\":  " << currentMap.getWidth()  << ",\n";
+    file << "\"Height\": " << currentMap.getHeight() << ",\n";
+    file << "\"Layers\": \n[";
+
+    for(size_t layerIndex = 0; layerIndex < currentMap.getLayers();++layerIndex){
+        file << "[";
+        for(int y = 0; y < currentMap.getHeight();++y){
+            file << "\n[";
+            for(int x = 0; x < currentMap.getWidth();++x){
+                file << currentMap.getTile(x,y,layerIndex);
+                if(x < currentMap.getWidth() - 1){
+                    file << ",";
+                }
+            }
+            file << "]";
+            if(y < currentMap.getHeight() - 1){
+                file << ",";
+            }
+        }
+        file << "\n]";
+        if(layerIndex < currentMap.getLayers() - 1){
+            file << ",";
+        }
+    }
+    file << "]";
+    file << "\n}";
     return true;
-}
+};
+
 
 std::optional<Map> mapIO::load(const std::filesystem::path& path){
     std::ifstream file(path);
-
-    if (!file.is_open())
-    {
+    if(!file.is_open()){
         return std::nullopt;
     }
 
     json data;
     file >> data;
+    //creating map
+    int width = data["Width"].get<int>();
+    int height = data["Height"].get<int>();
+    size_t layerCount = data["Layers"].size();
+    Map map{width,height,layerCount};
 
-    int width = data["width"].get<int>();
-    int height = data["height"].get<int>();
-
-    std::size_t layerCount = data["layers"].size();
-
-    Map map(
-            width,
-            height,
-            layerCount
-    );
-
-    for (std::size_t layerIndex = 0;layerIndex < layerCount;++layerIndex){
-        for (int y = 0; y < height; ++y){
-            for (int x = 0; x < width; ++x){
-                int tileID = data["layers"][layerIndex]["tiles"][y][x].get<int>();
-                map.setTile(
-                        x,
-                        y,
-                        layerIndex,
-                        tileID
-                );
+    for(size_t layerIndex = 0; layerIndex < map.getLayers();++layerIndex){
+        for(int y = 0; y < map.getHeight();++y){
+            for(int x = 0; x < map.getWidth();++x){
+                int tileID = data["Layers"][layerIndex][y][x].get<int>();
+                map.setTile(x,y,layerIndex,tileID);
             }
         }
     }
+
     return map;
-}
+};
+
