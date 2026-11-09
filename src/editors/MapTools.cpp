@@ -3,6 +3,12 @@
 //
 
 #include "MapTools.h"
+#include "../map/Map.h"
+
+#include "imgui.h"
+#include <optional>
+#include <algorithm>
+
 
 void MapTools::handleMapInput(EditorContext &context) {
 

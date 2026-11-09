@@ -1,9 +1,7 @@
 #pragma once
 
 #include <SDL3/SDL.h>
-#include <imgui.h>
-#include <imgui_impl_sdl3.h>
-#include <imgui_impl_sdlrenderer3.h>
+#include <filesystem>
 
 #include "../graphics/Tileset.h"
 #include "../assets/AssetManager.h"
@@ -11,8 +9,6 @@
 #include "../editors/EditorUI.h"
 
 
-#include <filesystem>
-#include <optional>
 
 class Engine
 {

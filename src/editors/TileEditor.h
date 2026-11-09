@@ -6,9 +6,6 @@
 #define RPGMAKER_TILEEDITOR_H
 
 #include "imgui.h"
-#include "SDL3/SDL.h"
-
-
 #include "../graphics/Tileset.h"
 #include "EditorState.h"
 
@@ -25,9 +22,7 @@ struct TileStartEnd{
 
 class TileEditor {
 public:
-    static void drawUI( Tileset& tileset,
-                        EditorState& editorState
-                        );
+    static void drawUI( Tileset& tileset,EditorState& editorState);
 private:
     static int calculateTileID(
             MouseXY cords,
@@ -42,8 +37,7 @@ private:
 
     static void drawHoverTile(Tileset &tileset);
 
-    static void drawSelectedTile(int tileID,
-                                 Tileset& tileset);
+    static void drawSelectedTile(int tileID,Tileset& tileset);
 };
 
 

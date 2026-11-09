@@ -6,16 +6,13 @@
 #define RPGMAKER_MAPIO_H
 
 #include "Map.h"
-#include <nlohmann/json.hpp>
-#include <fstream>
 
-using json = nlohmann::json;
 
-class mapIO {
-public:
-    static bool save(const Map &currentMap,const std::filesystem::path &path);
-    static std::optional<Map> load(const std::filesystem::path &path);
-};
+
+namespace mapIO {
+    bool save(const Map &currentMap,const std::filesystem::path &path);
+    std::optional<Map> load(const std::filesystem::path &path);
+}
 
 
 #endif //RPGMAKER_MAPIO_H

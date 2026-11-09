@@ -3,6 +3,8 @@
 //
 
 #include "MapCreatorDialog.h"
+#include "../map/mapIO.h"
+#include "imgui.h"
 
 void MapCreatorDialog::drawUI(std::optional<Map> &currentMap,  EditorState& editorState) {
     ImGui::Begin("Map Editor");

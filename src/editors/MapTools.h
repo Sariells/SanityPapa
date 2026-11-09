@@ -5,12 +5,6 @@
 #ifndef RPGMAKER_MAPTOOLS_H
 #define RPGMAKER_MAPTOOLS_H
 
-#include "imgui.h"
-
-#include <optional>
-#include <algorithm>
-
-#include "../map/Map.h"
 #include "EditorState.h"
 #include "EditorContext.h"
 
@@ -37,7 +31,7 @@ private:
     int lastPaintX = -1;
     int lastPaintY = -1;
     bool hasLast = false;
-//
+
     int startX = -1;
     int startY = -1;
     bool hasFillStart = false;

@@ -3,6 +3,9 @@
 //
 
 #include "ToolPanel.h"
+#include "imgui.h"
+#include "fmt/core.h"
+#include "SDL3_image/SDL_image.h"
 
 bool ToolPanel::initialize(SDL_Renderer *renderer,
                            const AssetManager& assets) {

@@ -5,17 +5,15 @@
 #ifndef RPGMAKER_EDITORUI_H
 #define RPGMAKER_EDITORUI_H
 
-#include "SDL3/SDL.h"
-#include "imgui.h"
-#include "imgui_impl_sdl3.h"
-#include "imgui_impl_sdlrenderer3.h"
-#include "fmt/core.h"
-
 #include "MapCreatorDialog.h"
 #include "TileEditor.h"
 #include "ToolPanel.h"
-#include "EditorContext.h"
 #include "MapTools.h"
+#include "EditorContext.h"
+#include "SDL3/SDL.h"
+
+
+
 
 class EditorUI {
 public:

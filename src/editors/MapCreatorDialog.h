@@ -5,12 +5,9 @@
 #ifndef RPGMAKER_MAPCREATORDIALOG_H
 #define RPGMAKER_MAPCREATORDIALOG_H
 
-#include "imgui.h"
 
 #include <optional>
-
 #include "../map/Map.h"
-#include "../map/mapIO.h"
 #include "EditorState.h"
 
 class MapCreatorDialog {

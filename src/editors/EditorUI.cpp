@@ -3,6 +3,12 @@
 //
 
 #include "EditorUI.h"
+#include "imgui.h"
+#include "imgui_impl_sdl3.h"
+#include "imgui_impl_sdlrenderer3.h"
+#include "fmt/core.h"
+
+
 
 bool EditorUI::initialize(SDL_Window *window, SDL_Renderer *renderer,const AssetManager& assetManager) {
     IMGUI_CHECKVERSION();

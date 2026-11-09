@@ -3,6 +3,10 @@
 //
 
 #include "mapIO.h"
+#include <nlohmann/json.hpp>
+#include <fstream>
+
+using json = nlohmann::json;
 
 bool mapIO::save(const Map &currentMap,const std::filesystem::path &path){
     if(!path.parent_path().empty()){

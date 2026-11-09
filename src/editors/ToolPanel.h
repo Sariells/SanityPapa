@@ -5,10 +5,8 @@
 #ifndef RPGMAKER_TOOLPANEL_H
 #define RPGMAKER_TOOLPANEL_H
 
-#include "imgui.h"
 #include "SDL3/SDL.h"
-#include "fmt/core.h"
-#include "SDL3_image/SDL_image.h"
+
 
 #include <filesystem>
 #include <string>
